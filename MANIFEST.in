@@ -1,0 +1,3 @@
+include setup.cfg
+include versioneer.py
+include chebi_tool/_version.py
