@@ -51,8 +51,8 @@ class ChEBIGraph():
         self.G.remove_edges_from(edges_to_remove)        
 
         
-    def get_subgraph(self, token='CHEBI:25350', name=None, depths=10, undirected=True, show=False, **kwargs):
-        H = nx.ego_graph(self.G, token, depths, undirected=undirected)
+    def get_subgraph(self, token='CHEBI:25350', name=None, depth=10, undirected=True, show=False, **kwargs):
+        H = nx.ego_graph(self.G, token, depth, undirected=undirected)
         if show:
             if name is None:
                 name = token
