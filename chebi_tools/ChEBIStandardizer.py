@@ -57,7 +57,7 @@ class ChEBIStandardizer():
         token = self._process_token(token)
 
         match token:
-            case int():
+            case int() | np.int8() | np.int32() | np.int64() | np.uint8() | np.uint32() | np.uint64():
                 return self._names.loc[token]
             case str():
                 return self.names.loc[token.lower()]        
@@ -67,7 +67,7 @@ class ChEBIStandardizer():
         token = self._process_token(token)
 
         match token:
-            case int():
+            case int() | np.int8() | np.int32() | np.int64() | np.uint8() | np.uint32() | np.uint64():
                 return self._names.loc[token]
             case str():
                 return self.names.loc[token.lower()]
@@ -104,7 +104,7 @@ class ChEBIStandardizer():
         print(token, type(token))
 
         match token:
-            case int():
+            case int() | np.int8() | np.int32() | np.int64() | np.uint8() | np.uint32() | np.uint64():
                 compound_id = token
                 exact_match = True
             case str():

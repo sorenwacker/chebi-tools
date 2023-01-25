@@ -4,6 +4,7 @@ import obonet
 import networkx as nx
 import pandas as pd
 
+from networkx.exception import NodeNotFound
 from pyvis.network import Network
 from tqdm import tqdm
 
@@ -12,6 +13,8 @@ from . import ChEBIDownloader
 
 
 class ChEBIGraph():
+
+
     def __init__(self, download_dir=None, G=None):
         self.downloader = ChEBIDownloader(download_dir=download_dir)
         self.downloader.download_missing()
@@ -20,7 +23,8 @@ class ChEBIGraph():
         if G is None:
             self.load_graph()
         #self.df = self.get_data_from_graph()
-    
+
+
     def check_node(self, node):
             data = self.G.nodes[node]
             if 'property_value' not in data.keys():
@@ -32,15 +36,19 @@ class ChEBIGraph():
             if (mass is None) or (mass < 50) or (mass > 1500):
                 return False
             return True    
-        
+
+
     def load_graph(self):
         fn = self.downloader.get_path('obo')
         print(f'Loading topology from: {fn}')
         self.G = obonet.read_obo(fn)
-        
+
+
     def remove_unnecessary_nodes(self):
         self.remove_deuterated_compounds()
+        self.remove_oligopeptides()
         self.remove_compound_classes_nodes()
+
 
     def remove_compound_classes_nodes(self):
         # Remove nodes without propertie values
@@ -53,13 +61,48 @@ class ChEBIGraph():
         edges_to_remove = [edge for edge in self.G.edges if edge[2] not in edge_types_to_keep]
         self.G.remove_edges_from(edges_to_remove)        
 
+
     def remove_deuterated_compounds(self):   
-        print('Removing dueterated compounds')  
+        print('Removing deuterated compounds')  
         self.remove_subgraph('CHEBI:76107')
 
+
+    def remove_dipeptides(self):   
+        print('Removing dipeptides')
+        self.remove_subgraph('CHEBI:46761')
+
+
+    def remove_tripeptides(self):   
+        print('Removing tripeptides')  
+        self.remove_subgraph('CHEBI:47923')
+
+
+    def remove_tetrapeptides(self):   
+        print('Removing tetrapeptides')  
+        self.remove_subgraph('CHEBI:48030')
+
+
+    def remove_pentapeptides(self):   
+        print('Removing pentapeptides')  
+        self.remove_subgraph('CHEBI:48545')    
+
+
+    def remove_oligopeptides(self):   
+        print('Removing oligopeptides')  
+        self.remove_dipeptides()
+        self.remove_tripeptides()
+        self.remove_tetrapeptides()
+        self.remove_pentapeptides()
+        self.remove_subgraph('CHEBI:7755')
+
+
     def remove_subgraph(self, token, depth=1):
-        a = self.G.get_subgraph('CHEBI:76107', depth=depth)
-        self.G.remove_nodes_from(a.nodes)
+        try:
+            a = self.get_subgraph(token, depth=depth)
+            self.G.remove_nodes_from(a.nodes)
+        except NodeNotFound as e:
+            logging.warning(e)
+
 
     def get_subgraph(self, token='CHEBI:25350', name=None, depth=10, undirected=True, show=False, **kwargs):
         H = nx.ego_graph(self.G, token, depth, undirected=undirected)
@@ -70,7 +113,13 @@ class ChEBIGraph():
         return H
         
         
-    def show_graph(self, G, name='graph', height='800px',  width='400px', notebook=True, directed=True):
+    def show_graph(self, G, name='graph', height='400px',  width='800px', notebook=True, directed=True):
+        
+        n_nodes = len(G.nodes)
+
+        if n_nodes > 100:
+            logging.warning(f'To many nodes to plot (n={n_nodes})')
+        
         fn = f'{"".join([e for e in name if e.isalnum()])}.html'       
         for n in G.nodes(data=True):
           n[1]['title']=n[0] #add hoovering to graph

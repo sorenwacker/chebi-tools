@@ -14,23 +14,27 @@ class Item(BaseModel):
     price: float
     tax: Optional[float] = None
 
-std = ChEBIStandardizer()
-graph = ChEBIGraph()
+STD = ChEBIStandardizer()
+#graph = ChEBIGraph()
 
 app = FastAPI()
 
 @app.get("/")
 async def root():
-    return {"message": "ChEBI tool"}
+    return "ChEBI tools"
 
 @app.get("/name/{name}/")
 async def get_name(name:str):
     print(name)
-    suggested_name = std.suggest_name(name)
+    suggested_name = STD.suggest_name(name)
     return {"suggested_name": suggested_name}
 
-
+'''
 @app.get("/graph/{name}/")
 async def get_subgraph(name:str):
-    graph.get_subgraph(name, show=True)
-    return {"suggested_name": suggested_name}
+    try:
+        suggested_name = graph.get_subgraph(name, show=True)
+        return {"suggested_name": suggested_name}
+    except KeyError:
+        return {"suggested_name": None}
+'''
