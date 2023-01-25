@@ -35,7 +35,8 @@ def main():
         if group_size > group_is_large_size:
             logging.warning(f'Group {node} size {group_size} > {group_is_large_size}')
             errors.append(node)
-            continue
+            with open("errors.log", "a") as f:
+                f.write(f"{node}")
             
         ref_id, ref_name = graph.get_reference_chebi_of_group(group)
         
