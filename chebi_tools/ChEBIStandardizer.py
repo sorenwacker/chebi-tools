@@ -101,8 +101,6 @@ class ChEBIStandardizer():
     def get_chebi_reference(self, token):
         token = self._process_token(token)
         
-        print(token, type(token))
-
         match token:
             case int() | np.int8() | np.int32() | np.int64() | np.uint8() | np.uint32() | np.uint64():
                 compound_id = token
@@ -112,8 +110,7 @@ class ChEBIStandardizer():
                 compound_id = search_result.COMPOUND_ID
 
         result = self.reference_chebi.loc[compound_id].to_dict()
-        suggested_name = self.suggest_name(compound_id)
-        result.update(dict(exact_match=exact_match, suggested_name=suggested_name))
+        result.update(dict(exact_match=exact_match))
         return result
 
     def suggest_name(self, token):
