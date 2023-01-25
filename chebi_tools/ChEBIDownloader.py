@@ -129,7 +129,7 @@ class ChEBIDownloader:
         else:
             return fn
         assert fn_out.is_file(), fn_out
-        fn.unlink()        
+        fn.unlink()
         return fn_out
 
     def check_files(self):

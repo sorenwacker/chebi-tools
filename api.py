@@ -6,30 +6,32 @@ from pydantic import BaseModel
 from typing import Optional
 
 
-
-
 class Item(BaseModel):
     name: str
     description: Optional[str] = None
     price: float
     tax: Optional[float] = None
 
+
 STD = ChEBIStandardizer()
-#graph = ChEBIGraph()
+# graph = ChEBIGraph()
 
 app = FastAPI()
+
 
 @app.get("/")
 async def root():
     return "ChEBI tools"
 
+
 @app.get("/name/{name}/")
-async def get_name(name:str):
+async def get_name(name: str):
     print(name)
     suggested_name = STD.suggest_name(name)
     return {"suggested_name": suggested_name}
 
-'''
+
+"""
 @app.get("/graph/{name}/")
 async def get_subgraph(name:str):
     try:
@@ -37,4 +39,4 @@ async def get_subgraph(name:str):
         return {"suggested_name": suggested_name}
     except KeyError:
         return {"suggested_name": None}
-'''
+"""

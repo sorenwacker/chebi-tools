@@ -16,7 +16,7 @@ install_requires = [
     "obonet",
     "pyvis",
     "tqdm",
-    "pyarrow"
+    "pyarrow",
 ]
 
 config = {
