@@ -38,10 +38,13 @@ class ChEBIGraph():
         print(f'Loading topology from: {fn}')
         self.G = obonet.read_obo(fn)
         
-        
     def remove_unnecessary_nodes(self):
+        self.remove_deuterated_compounds()
+        self.remove_compound_classes_nodes()
+
+    def remove_compound_classes_nodes(self):
         # Remove nodes without propertie values
-        print('Removing unnecessary nodes')
+        print('Removing compound classes nodes')
         nodes_to_remove = [n for n in tqdm(self.nodes) if not self.check_node(n)]
         self.G.remove_nodes_from(nodes_to_remove)
 
@@ -50,7 +53,14 @@ class ChEBIGraph():
         edges_to_remove = [edge for edge in self.G.edges if edge[2] not in edge_types_to_keep]
         self.G.remove_edges_from(edges_to_remove)        
 
-        
+    def remove_deuterated_compounds(self):   
+        print('Removing dueterated compounds')  
+        self.remove_subgraph('CHEBI:76107')
+
+    def remove_subgraph(self, token, depth=1):
+        a = self.G.get_subgraph('CHEBI:76107', depth=depth)
+        self.G.remove_nodes_from(a.nodes)
+
     def get_subgraph(self, token='CHEBI:25350', name=None, depth=10, undirected=True, show=False, **kwargs):
         H = nx.ego_graph(self.G, token, depth, undirected=undirected)
         if show:
@@ -60,13 +70,13 @@ class ChEBIGraph():
         return H
         
         
-    def show_graph(self, G, name='graph', width='400px', height='800px', notebook=True, directed=True):
+    def show_graph(self, G, name='graph', height='800px',  width='400px', notebook=True, directed=True):
         fn = f'{"".join([e for e in name if e.isalnum()])}.html'       
         for n in G.nodes(data=True):
           n[1]['title']=n[0] #add hoovering to graph
           n[1]['label']=n[0]+'\n'+n[1]['name'] #add hoovering to graph
 
-        nt = Network(width, height, notebook=notebook, directed=directed)
+        nt = Network(height, width, notebook=notebook, directed=directed)
         nt.from_nx(G)
         return nt.show(fn)
     

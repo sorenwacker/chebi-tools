@@ -82,11 +82,16 @@ class ChEBIStandardizer():
     
     
     def search(self, name:str):
-        candidates = self.names.NAME_lowercase
-        name = name.lower()
-        distances = [self.distance(candidate, name) for candidate in candidates]
-        ndx = np.argmin(distances)
-        return self.names.iloc[ndx]
+        if name.lower() in self.names.NAME_lowercase:
+            exact_match = True
+            return self.names.set_index('c').loc[name.lower()], exact_match
+        else:
+            exact_match = False
+            candidates = self.names.NAME_lowercase
+            name = name.lower()
+            distances = [self.distance(candidate, name) for candidate in candidates]
+            ndx = np.argmin(distances)
+            return self.names.iloc[ndx], exact_match
 
     
     def distance(self, string_a, string_b):
@@ -96,20 +101,25 @@ class ChEBIStandardizer():
     def get_chebi_reference(self, token):
         token = self._process_token(token)
         
+        print(token, type(token))
+
         match token:
             case int():
                 compound_id = token
+                exact_match = True
             case str():
-                search_result = self.search(token)
-                print(search_result)
+                search_result, exact_match = self.search(token)
                 compound_id = search_result.COMPOUND_ID
-        
-        return self.reference_chebi.loc[compound_id]
+
+        result = self.reference_chebi.loc[compound_id].to_dict()
+        suggested_name = self.suggest_name(compound_id)
+        result.update(dict(exact_match=exact_match, suggested_name=suggested_name))
+        return result
 
     def suggest_name(self, token):
-        data = self.get_chebi_reference(token)
-        name = data.NAME
-        chebi = data.ChEBI
+        record = self.get_chebi_reference(token)
+        name = record['NAME']
+        chebi = record['ChEBI']
         if len(name) > 30:
             return chebi
         return name
