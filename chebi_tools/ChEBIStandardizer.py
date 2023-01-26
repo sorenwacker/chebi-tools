@@ -10,11 +10,14 @@ from .ChEBIDownloader import ChEBIDownloader
 
 
 class ChEBIStandardizer:
-    """3 / 3
-
-    The ChEBIStandardizer class is a tool that is used to standardize compounds in the ChEBI (Chemical Entities of Biological Interest) database. It can be used to search for compounds by ID or name, and it can also download data from the ChEBI database if it is not already present on the user's machine. The class uses the Levenshtein library for fuzzy string matching, the Pandas library for data manipulation, and the ChEBIDownloader class to download data from the ChEBI database. The class also uses the numpy library and the pathlib library to handle file input and output.
     """
-
+    The ChEBIStandardizer class is a tool that is used to standardize compounds 
+    in the ChEBI (Chemical Entities of Biological Interest) database. It can be used 
+    to search for compounds by ID or name, and it can also download data from the ChEBI 
+    database if it is not already present on the user's machine. The class uses the 
+    Levenshtein library for fuzzy string matching, the Pandas library for data manipulation, 
+    and the ChEBIDownloader class to download data from the ChEBI database.
+    """
     def __init__(self, download_dir=None):
         self.names = None
         self.smiles = None
