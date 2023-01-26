@@ -91,9 +91,9 @@ class ChEBIGraph:
         self.remove_pentapeptides()
         self.remove_subgraph("CHEBI:7755")
 
-    def remove_isotopically_modified_compounds(self):
-        print("Removing isotopically modified compounds")
-        self.remove_subgraph("CHEBI:139358", depth=2)
+    #def remove_isotopically_modified_compounds(self):
+    #    print('Removing isotopically modified compounds')
+    #    self.remove_subgraph("CHEBI:139358", depth=2)
 
     def remove_subgraph(self, token, depth=1):
         try:
@@ -136,7 +136,7 @@ class ChEBIGraph:
         fn = f'{"".join([e for e in name if e.isalnum()])}.html'
         for n in G.nodes(data=True):
             n[1]["title"] = n[0]  # add hoovering to graph
-            n[1]["label"] = "\n".join([n[0], n[1]["name"]])  # add hoovering to graph
+            n[1]["label"] = '\n'.join([n[0], n[1]["name"]])  # add hoovering to graph
 
         nt = Network(height, width, notebook=notebook, directed=directed)
         nt.from_nx(G)
