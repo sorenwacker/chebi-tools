@@ -43,6 +43,7 @@ class ChEBIGraph:
         self.remove_deuterated_compounds()
         self.remove_oligopeptides()
         self.remove_compound_classes_nodes()
+        self.remove_isotopically_modified_compounds()
 
     def remove_compound_classes_nodes(self):
         # Remove nodes without propertie values
@@ -65,23 +66,23 @@ class ChEBIGraph:
 
     def remove_deuterated_compounds(self):
         print("Removing deuterated compounds")
-        self.remove_subgraph("CHEBI:76107")
+        self.remove_subgraph("CHEBI:76107", undirected=True, reverse_graph=True, depth=1)
 
     def remove_dipeptides(self):
         print("Removing dipeptides")
-        self.remove_subgraph("CHEBI:46761")
+        self.remove_subgraph("CHEBI:46761", undirected=True, reverse_graph=True, depth=1)
 
     def remove_tripeptides(self):
         print("Removing tripeptides")
-        self.remove_subgraph("CHEBI:47923")
+        self.remove_subgraph("CHEBI:47923", undirected=True, reverse_graph=True, depth=1)
 
     def remove_tetrapeptides(self):
         print("Removing tetrapeptides")
-        self.remove_subgraph("CHEBI:48030")
+        self.remove_subgraph("CHEBI:48030", undirected=True, reverse_graph=True, depth=1)
 
     def remove_pentapeptides(self):
         print("Removing pentapeptides")
-        self.remove_subgraph("CHEBI:48545")
+        self.remove_subgraph("CHEBI:48545", undirected=True, reverse_graph=True, depth=1)
 
     def remove_oligopeptides(self):
         print("Removing oligopeptides")
@@ -89,15 +90,16 @@ class ChEBIGraph:
         self.remove_tripeptides()
         self.remove_tetrapeptides()
         self.remove_pentapeptides()
-        self.remove_subgraph("CHEBI:7755")
+        self.remove_subgraph("CHEBI:25676", undirected=True, reverse_graph=True, depth=1)
 
-    #def remove_isotopically_modified_compounds(self):
-    #    print('Removing isotopically modified compounds')
-    #    self.remove_subgraph("CHEBI:139358", depth=2)
+    def remove_isotopically_modified_compounds(self):
+        print('Removing isotopically modified compounds')
+        self.remove_subgraph('CHEBI:139358', depth=2, undirected=False, reverse_graph=True)
 
-    def remove_subgraph(self, token, depth=1):
+
+    def remove_subgraph(self, token, depth=1, undirected=False, reverse_graph=False):
         try:
-            a = self.get_subgraph(token, depth=depth)
+            a = self.get_subgraph(token, depth=depth, undirected=undirected, reverse_graph=reverse_graph)
             self.G.remove_nodes_from(a.nodes)
         except NodeNotFound as e:
             logging.warning(e)
@@ -109,9 +111,15 @@ class ChEBIGraph:
         depth=10,
         undirected=True,
         show=False,
+        reverse_graph=False,
         **kwargs,
     ):
-        H = nx.ego_graph(self.G, token, depth, undirected=undirected)
+        G = self.G
+        if reverse_graph:
+            G = G.reverse(copy=True)
+        H = nx.ego_graph(G, token, depth, undirected=undirected)
+        if reverse_graph:
+            H = H.reverse(copy=True)
         if show:
             if name is None:
                 name = token
@@ -126,12 +134,14 @@ class ChEBIGraph:
         width="1000px",
         notebook=True,
         directed=True,
+        max_nodes=250
     ):
 
         n_nodes = len(G.nodes)
 
-        if n_nodes > 100:
-            logging.warning(f"To many nodes to plot (n={n_nodes})")
+        if n_nodes > max_nodes:
+            logging.warning(f"Too many nodes to plot (n={n_nodes})")
+            return None
 
         fn = f'{"".join([e for e in name if e.isalnum()])}.html'
         for n in G.nodes(data=True):
@@ -199,6 +209,7 @@ class ChEBIGraph:
         grps = data.groupby(["abs_charge", "name_alpha"])
         for ndx, grp in grps:
             return grp.index[0], grp.name[0]
+        return None, None
 
     def get_group(self, token):
         H = self.get_subgraph(token)
