@@ -35,7 +35,7 @@ def main():
             logging.warning(f"Group {node} size {group_size} > {group_is_large_size}")
             errors.append(node)
             with open("errors.log", "a") as f:
-                f.write(f"{node}")
+                f.write(f"{node}\n")
 
         ref_id, ref_name = graph.get_reference_chebi_of_group(group)
 
@@ -43,7 +43,7 @@ def main():
         [all_nodes.remove(e) for e in group]
         n += 1
         if n % 100 == 0:
-            results.to_parquet("reference-chebis.parquet")
+            results.to_parquet("tmp_reference-chebis.parquet")
 
     results.to_parquet("reference-chebis.parquet")
 
