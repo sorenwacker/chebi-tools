@@ -9,7 +9,3 @@ Tools to extract subgraphs from the ChEBI database and for standardization of mo
 
 ## Aspatate
 ![image](https://user-images.githubusercontent.com/3391614/216475349-11c365fc-1079-4a8a-b145-404d1af70338.png)
-
-
-## Abscisic acid
-![image](https://user-images.githubusercontent.com/3391614/216475586-1c658eaa-4167-45e8-89a4-d8e6db75ecf5.png)
