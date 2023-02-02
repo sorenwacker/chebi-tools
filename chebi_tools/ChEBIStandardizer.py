@@ -63,6 +63,10 @@ class ChEBIStandardizer:
         ]
         names = pd.concat([names_from_names, names_from_compounds]).drop_duplicates()
 
+        anions = names[names.NAME.str.contains(' anion')].copy()
+        anions.NAME = anions.NAME.str.replace('anion', '').str.strip()
+        names = pd.concat([names, anions])
+        
         # Experimental, ma
         # r = names[names.NAME.fillna('').str.startswith('(R)-')].copy()
         # r['NAME'] = r['NAME'].fillna('').str.replace('(R)-', '', regex=False)
@@ -74,19 +78,19 @@ class ChEBIStandardizer:
         names["NAME_lowercase"] = names["NAME"].str.lower()
         self.names = names
 
-    def load_reference_data(self):
+    def load_reference_data(self, fn=None):
+        if fn is None:
+            fn = '/home/swacker/workspace/chebi-tools/reference-chebis.parquet'
         reference_chebi = (
-            pd.read_parquet(
-                "/home/swacker/Projects/230119-sw__chebi-tools/_reference-chebis.parquet"
-            )
+            pd.read_parquet(fn)
             .dropna()
-            .drop_duplicates()
+            .reset_index()
         )
-        reference_chebi.columns = ["ChEBI", "NAME"]
-        reference_chebi["ChEBI"] = reference_chebi["ChEBI"].str.replace(
-            "CHEBI", "ChEBI"
-        )
-        reference_chebi.index = reference_chebi["ChEBI"].apply(
+        reference_chebi.columns = ["CHEBI", "REF_CHEBI", "REF_NAME"]
+        #reference_chebi["ChEBI"] = reference_chebi["ChEBI"].str.replace(
+        #    "CHEBI", "ChEBI"
+        #)
+        reference_chebi.index = reference_chebi["CHEBI"].apply(
             lambda x: int(x.lower().replace("chebi:", ""))
         )
         self.reference_chebi = reference_chebi
@@ -122,7 +126,7 @@ class ChEBIStandardizer:
         else:
             exact_match = False
             candidates = self.names.NAME_lowercase
-            name = name.lower()
+            name = query.lower()
             distances = [self.distance(candidate, query) for candidate in candidates]
             ndx = np.argmin(distances)
             name = self.names.iloc[ndx]
@@ -153,8 +157,8 @@ class ChEBIStandardizer:
 
     def suggest_name(self, token):
         record = self.get_chebi_reference(token)
-        name = record["NAME"]
-        chebi = record["ChEBI"]
+        name = record["REF_NAME"]
+        chebi = record["REF_CHEBI"]
         if len(name) > 30:
             return chebi
         return name
@@ -168,8 +172,8 @@ class ChEBIStandardizer:
 
     def process(self, token):
         record = self.get_chebi_reference(token)
-        compound_id = self._process_token(record["ChEBI"])
-        name = record["NAME"]
+        compound_id = self._process_token(record["CHEBI"])
+        name = record["REF_NAME"]
         smiles = self.get_smiles(compound_id)
         record.update(dict(SMILES=smiles, QUERY=token))
         return record
