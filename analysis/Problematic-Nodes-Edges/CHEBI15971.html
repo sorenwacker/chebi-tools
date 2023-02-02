@@ -1,0 +1,155 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 1000px;
+                 height: 800px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "def": "\"The L-enantiomer of histidinate(2-).\" []", "id": "CHEBI:32511", "is_a": ["CHEBI:32530"], "label": "CHEBI:32511\nL-histidinate(2-)", "name": "L-histidinate(2-)", "property_value": ["http://purl.obolibrary.org/obo/chebi/formula \"C6H7N3O2\" xsd:string", "http://purl.obolibrary.org/obo/chebi/monoisotopicmass \"153.05492\" xsd:string", "http://purl.obolibrary.org/obo/chebi/mass \"153.13880\" xsd:string", "http://purl.obolibrary.org/obo/chebi/charge \"-2\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchikey \"TWRZMXZXJKNOLO-YFKPBYRVSA-L\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchi \"InChI=1S/C6H9N3O2/c7-5(6(10)11)1-4-2-8-3-9-4/h2-3,5H,1,7H2,(H2,8,9,10,11)/p-2/t5-/m0/s1\" xsd:string", "http://purl.obolibrary.org/obo/chebi/smiles \"N[C@@H](Cc1c[n-]cn1)C([O-])=O\" xsd:string"], "relationship": ["is_enantiomer_of CHEBI:32524", "is_conjugate_base_of CHEBI:32510", "has_role CHEBI:76971", "has_role CHEBI:75772"], "shape": "dot", "size": 10, "subset": ["3_STAR"], "title": "CHEBI:32511"}, {"color": "#97c2fc", "id": "CHEBI:32530", "is_a": ["CHEBI:33558"], "label": "CHEBI:32530\nhistidinate(2-)", "name": "histidinate(2-)", "property_value": ["http://purl.obolibrary.org/obo/chebi/formula \"C6H7N3O2\" xsd:string", "http://purl.obolibrary.org/obo/chebi/monoisotopicmass \"153.05492\" xsd:string", "http://purl.obolibrary.org/obo/chebi/mass \"153.13880\" xsd:string", "http://purl.obolibrary.org/obo/chebi/charge \"-2\" xsd:string", "http://purl.obolibrary.org/obo/chebi/smiles \"NC(Cc1c[n-]cn1)C([O-])=O\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchikey \"TWRZMXZXJKNOLO-UHFFFAOYSA-L\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchi \"InChI=1S/C6H9N3O2/c7-5(6(10)11)1-4-2-8-3-9-4/h2-3,5H,1,7H2,(H2,8,9,10,11)/p-2\" xsd:string"], "relationship": ["is_conjugate_base_of CHEBI:32529"], "shape": "dot", "size": 10, "subset": ["3_STAR"], "title": "CHEBI:32530"}, {"color": "#97c2fc", "def": "\"The D-enantiomer of histidinate(2-).\" []", "id": "CHEBI:32524", "is_a": ["CHEBI:32530"], "label": "CHEBI:32524\nD-histidinate(2-)", "name": "D-histidinate(2-)", "property_value": ["http://purl.obolibrary.org/obo/chebi/formula \"C6H7N3O2\" xsd:string", "http://purl.obolibrary.org/obo/chebi/monoisotopicmass \"153.05492\" xsd:string", "http://purl.obolibrary.org/obo/chebi/mass \"153.13880\" xsd:string", "http://purl.obolibrary.org/obo/chebi/charge \"-2\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchi \"InChI=1S/C6H9N3O2/c7-5(6(10)11)1-4-2-8-3-9-4/h2-3,5H,1,7H2,(H2,8,9,10,11)/p-2/t5-/m1/s1\" xsd:string", "http://purl.obolibrary.org/obo/chebi/smiles \"N[C@H](Cc1c[n-]cn1)C([O-])=O\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchikey \"TWRZMXZXJKNOLO-RXMQYKEDSA-L\" xsd:string"], "relationship": ["is_enantiomer_of CHEBI:32511", "is_conjugate_base_of CHEBI:32523", "has_role CHEBI:75772"], "shape": "dot", "size": 10, "subset": ["3_STAR"], "title": "CHEBI:32524"}, {"color": "#97c2fc", "def": "\"The L-enantiomer of histidinate(1-),\" []", "id": "CHEBI:32510", "is_a": ["CHEBI:32529"], "label": "CHEBI:32510\nL-histidinate(1-)", "name": "L-histidinate(1-)", "property_value": ["http://purl.obolibrary.org/obo/chebi/mass \"154.14660\" xsd:string", "http://purl.obolibrary.org/obo/chebi/monoisotopicmass \"154.06220\" xsd:string", "http://purl.obolibrary.org/obo/chebi/charge \"-1\" xsd:string", "http://purl.obolibrary.org/obo/chebi/formula \"C6H8N3O2\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchikey \"HNDVDQJCIGZPNO-YFKPBYRVSA-M\" xsd:string", "http://purl.obolibrary.org/obo/chebi/smiles \"N[C@@H](Cc1c[nH]cn1)C([O-])=O\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchi \"InChI=1S/C6H9N3O2/c7-5(6(10)11)1-4-2-8-3-9-4/h2-3,5H,1,7H2,(H,8,9)(H,10,11)/p-1/t5-/m0/s1\" xsd:string"], "relationship": ["is_enantiomer_of CHEBI:32523", "is_conjugate_acid_of CHEBI:32511", "is_conjugate_base_of CHEBI:15971", "has_role CHEBI:75772", "has_role CHEBI:76971"], "shape": "dot", "size": 10, "subset": ["3_STAR"], "title": "CHEBI:32510"}, {"color": "#97c2fc", "def": "\"The L-enantiomer of histidinium(1+).\" []", "id": "CHEBI:32513", "is_a": ["CHEBI:32531"], "label": "CHEBI:32513\nL-histidinium(1+)", "name": "L-histidinium(1+)", "property_value": ["http://purl.obolibrary.org/obo/chebi/mass \"156.16262\" xsd:string", "http://purl.obolibrary.org/obo/chebi/monoisotopicmass \"156.07675\" xsd:string", "http://purl.obolibrary.org/obo/chebi/formula \"C6H10N3O2\" xsd:string", "http://purl.obolibrary.org/obo/chebi/charge \"+1\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchikey \"HNDVDQJCIGZPNO-YFKPBYRVSA-O\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchi \"InChI=1S/C6H9N3O2/c7-5(6(10)11)1-4-2-8-3-9-4/h2-3,5H,1,7H2,(H,8,9)(H,10,11)/p+1/t5-/m0/s1\" xsd:string", "http://purl.obolibrary.org/obo/chebi/smiles \"[NH3+][C@@H](Cc1c[nH]c[nH+]1)C([O-])=O\" xsd:string"], "relationship": ["is_enantiomer_of CHEBI:32526", "is_conjugate_base_of CHEBI:32512", "is_conjugate_acid_of CHEBI:15971", "has_role CHEBI:76971", "has_role CHEBI:75772"], "shape": "dot", "size": 10, "subset": ["3_STAR"], "title": "CHEBI:32513"}, {"color": "#97c2fc", "id": "CHEBI:32531", "is_a": ["CHEBI:33719"], "label": "CHEBI:32531\nhistidinium(1+)", "name": "histidinium(1+)", "property_value": ["http://purl.obolibrary.org/obo/chebi/mass \"156.16262\" xsd:string", "http://purl.obolibrary.org/obo/chebi/monoisotopicmass \"156.07675\" xsd:string", "http://purl.obolibrary.org/obo/chebi/formula \"C6H10N3O2\" xsd:string", "http://purl.obolibrary.org/obo/chebi/charge \"+1\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchikey \"HNDVDQJCIGZPNO-UHFFFAOYSA-O\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchi \"InChI=1S/C6H9N3O2/c7-5(6(10)11)1-4-2-8-3-9-4/h2-3,5H,1,7H2,(H,8,9)(H,10,11)/p+1\" xsd:string", "http://purl.obolibrary.org/obo/chebi/smiles \"[NH3+]C(Cc1c[nH]c[nH+]1)C([O-])=O\" xsd:string"], "relationship": ["is_conjugate_acid_of CHEBI:27570", "is_conjugate_base_of CHEBI:32532"], "shape": "dot", "size": 10, "subset": ["3_STAR"], "title": "CHEBI:32531"}, {"color": "#97c2fc", "def": "\"The D-enantiomer of histidinium(1+).\" []", "id": "CHEBI:32526", "is_a": ["CHEBI:32531"], "label": "CHEBI:32526\nD-histidinium(1+)", "name": "D-histidinium(1+)", "property_value": ["http://purl.obolibrary.org/obo/chebi/mass \"156.16262\" xsd:string", "http://purl.obolibrary.org/obo/chebi/monoisotopicmass \"156.07675\" xsd:string", "http://purl.obolibrary.org/obo/chebi/formula \"C6H10N3O2\" xsd:string", "http://purl.obolibrary.org/obo/chebi/charge \"+1\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchi \"InChI=1S/C6H9N3O2/c7-5(6(10)11)1-4-2-8-3-9-4/h2-3,5H,1,7H2,(H,8,9)(H,10,11)/p+1/t5-/m1/s1\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchikey \"HNDVDQJCIGZPNO-RXMQYKEDSA-O\" xsd:string", "http://purl.obolibrary.org/obo/chebi/smiles \"[NH3+][C@H](Cc1c[nH]c[nH+]1)C([O-])=O\" xsd:string"], "relationship": ["is_enantiomer_of CHEBI:32513", "is_conjugate_acid_of CHEBI:27947", "is_conjugate_base_of CHEBI:32527", "has_role CHEBI:75772"], "shape": "dot", "size": 10, "subset": ["3_STAR"], "title": "CHEBI:32526"}, {"color": "#97c2fc", "def": "\"The L-enantiomer of histidinium(2+).\" []", "id": "CHEBI:32512", "is_a": ["CHEBI:32532"], "label": "CHEBI:32512\nL-histidinium(2+)", "name": "L-histidinium(2+)", "property_value": ["http://purl.obolibrary.org/obo/chebi/mass \"157.17056\" xsd:string", "http://purl.obolibrary.org/obo/chebi/charge \"+2\" xsd:string", "http://purl.obolibrary.org/obo/chebi/formula \"C6H11N3O2\" xsd:string", "http://purl.obolibrary.org/obo/chebi/monoisotopicmass \"157.08403\" xsd:string", "http://purl.obolibrary.org/obo/chebi/smiles \"[NH3+][C@@H](Cc1c[nH]c[nH+]1)C(O)=O\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchikey \"HNDVDQJCIGZPNO-YFKPBYRVSA-P\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchi \"InChI=1S/C6H9N3O2/c7-5(6(10)11)1-4-2-8-3-9-4/h2-3,5H,1,7H2,(H,8,9)(H,10,11)/p+2/t5-/m0/s1\" xsd:string"], "relationship": ["is_enantiomer_of CHEBI:32527", "is_conjugate_acid_of CHEBI:32513", "has_role CHEBI:76971", "has_role CHEBI:75772"], "shape": "dot", "size": 10, "subset": ["3_STAR"], "title": "CHEBI:32512"}, {"alt_id": ["CHEBI:43190", "CHEBI:43239", "CHEBI:43048", "CHEBI:21324", "CHEBI:43114", "CHEBI:13117", "CHEBI:6240"], "color": "#97c2fc", "def": "\"The L-enantiomer of the amino acid histidine.\" []", "id": "CHEBI:15971", "is_a": ["CHEBI:83813", "CHEBI:27570", "CHEBI:15705"], "label": "CHEBI:15971\nL-histidine", "name": "L-histidine", "property_value": ["http://purl.obolibrary.org/obo/chebi/monoisotopicmass \"155.06948\" xsd:string", "http://purl.obolibrary.org/obo/chebi/mass \"155.15468\" xsd:string", "http://purl.obolibrary.org/obo/chebi/charge \"0\" xsd:string", "http://purl.obolibrary.org/obo/chebi/formula \"C6H9N3O2\" xsd:string", "http://purl.obolibrary.org/obo/chebi/smiles \"N[C@@H](Cc1c[nH]cn1)C(O)=O\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchikey \"HNDVDQJCIGZPNO-YFKPBYRVSA-N\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchi \"InChI=1S/C6H9N3O2/c7-5(6(10)11)1-4-2-8-3-9-4/h2-3,5H,1,7H2,(H,8,9)(H,10,11)/t5-/m0/s1\" xsd:string"], "relationship": ["is_enantiomer_of CHEBI:27947", "is_conjugate_acid_of CHEBI:32510", "is_conjugate_base_of CHEBI:32513", "is_tautomer_of CHEBI:57595", "has_role CHEBI:50733", "has_role CHEBI:27027", "has_role CHEBI:75772", "has_role CHEBI:76971", "has_role CHEBI:77746", "has_role CHEBI:84735", "has_role CHEBI:75771"], "shape": "dot", "size": 10, "subset": ["3_STAR"], "title": "CHEBI:15971"}, {"color": "#97c2fc", "def": "\"The D-enantiomer of histidinate(1-).\" []", "id": "CHEBI:32523", "is_a": ["CHEBI:32529"], "label": "CHEBI:32523\nD-histidinate(1-)", "name": "D-histidinate(1-)", "property_value": ["http://purl.obolibrary.org/obo/chebi/mass \"154.14660\" xsd:string", "http://purl.obolibrary.org/obo/chebi/monoisotopicmass \"154.06220\" xsd:string", "http://purl.obolibrary.org/obo/chebi/charge \"-1\" xsd:string", "http://purl.obolibrary.org/obo/chebi/formula \"C6H8N3O2\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchikey \"HNDVDQJCIGZPNO-RXMQYKEDSA-M\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchi \"InChI=1S/C6H9N3O2/c7-5(6(10)11)1-4-2-8-3-9-4/h2-3,5H,1,7H2,(H,8,9)(H,10,11)/p-1/t5-/m1/s1\" xsd:string", "http://purl.obolibrary.org/obo/chebi/smiles \"N[C@H](Cc1c[nH]cn1)C([O-])=O\" xsd:string"], "relationship": ["is_enantiomer_of CHEBI:32510", "is_conjugate_acid_of CHEBI:32524", "is_conjugate_base_of CHEBI:27947", "has_role CHEBI:75772"], "shape": "dot", "size": 10, "subset": ["3_STAR"], "title": "CHEBI:32523"}, {"color": "#97c2fc", "id": "CHEBI:32529", "is_a": ["CHEBI:33558"], "label": "CHEBI:32529\nhistidinate(1-)", "name": "histidinate(1-)", "property_value": ["http://purl.obolibrary.org/obo/chebi/mass \"154.14660\" xsd:string", "http://purl.obolibrary.org/obo/chebi/monoisotopicmass \"154.06220\" xsd:string", "http://purl.obolibrary.org/obo/chebi/charge \"-1\" xsd:string", "http://purl.obolibrary.org/obo/chebi/formula \"C6H8N3O2\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchikey \"HNDVDQJCIGZPNO-UHFFFAOYSA-M\" xsd:string", "http://purl.obolibrary.org/obo/chebi/smiles \"NC(Cc1c[nH]cn1)C([O-])=O\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchi \"InChI=1S/C6H9N3O2/c7-5(6(10)11)1-4-2-8-3-9-4/h2-3,5H,1,7H2,(H,8,9)(H,10,11)/p-1\" xsd:string"], "relationship": ["is_conjugate_acid_of CHEBI:32530", "is_conjugate_base_of CHEBI:27570"], "shape": "dot", "size": 10, "subset": ["3_STAR"], "title": "CHEBI:32529"}, {"color": "#97c2fc", "def": "\"The D-enantiomer of histidinium(2+).\" []", "id": "CHEBI:32527", "is_a": ["CHEBI:32532"], "label": "CHEBI:32527\nD-histidinium(2+)", "name": "D-histidinium(2+)", "property_value": ["http://purl.obolibrary.org/obo/chebi/mass \"157.17056\" xsd:string", "http://purl.obolibrary.org/obo/chebi/charge \"+2\" xsd:string", "http://purl.obolibrary.org/obo/chebi/formula \"C6H11N3O2\" xsd:string", "http://purl.obolibrary.org/obo/chebi/monoisotopicmass \"157.08403\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchikey \"HNDVDQJCIGZPNO-RXMQYKEDSA-P\" xsd:string", "http://purl.obolibrary.org/obo/chebi/smiles \"[NH3+][C@H](Cc1c[nH]c[nH+]1)C(O)=O\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchi \"InChI=1S/C6H9N3O2/c7-5(6(10)11)1-4-2-8-3-9-4/h2-3,5H,1,7H2,(H,8,9)(H,10,11)/p+2/t5-/m1/s1\" xsd:string"], "relationship": ["is_enantiomer_of CHEBI:32512", "is_conjugate_acid_of CHEBI:32526", "has_role CHEBI:75772"], "shape": "dot", "size": 10, "subset": ["3_STAR"], "title": "CHEBI:32527"}, {"color": "#97c2fc", "id": "CHEBI:32532", "is_a": ["CHEBI:33719"], "label": "CHEBI:32532\nhistidinium(2+)", "name": "histidinium(2+)", "property_value": ["http://purl.obolibrary.org/obo/chebi/mass \"157.17056\" xsd:string", "http://purl.obolibrary.org/obo/chebi/charge \"+2\" xsd:string", "http://purl.obolibrary.org/obo/chebi/formula \"C6H11N3O2\" xsd:string", "http://purl.obolibrary.org/obo/chebi/monoisotopicmass \"157.08403\" xsd:string", "http://purl.obolibrary.org/obo/chebi/smiles \"[NH3+]C(Cc1c[nH]c[nH+]1)C(O)=O\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchikey \"HNDVDQJCIGZPNO-UHFFFAOYSA-P\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchi \"InChI=1S/C6H9N3O2/c7-5(6(10)11)1-4-2-8-3-9-4/h2-3,5H,1,7H2,(H,8,9)(H,10,11)/p+2\" xsd:string"], "relationship": ["is_conjugate_acid_of CHEBI:32531"], "shape": "dot", "size": 10, "subset": ["3_STAR"], "title": "CHEBI:32532"}, {"color": "#97c2fc", "def": "\"Zwitterionic form of L-histidine having an anionic carboxy group and a protonated alpha-amino group.\" []", "id": "CHEBI:57595", "is_a": ["CHEBI:35238", "CHEBI:62031"], "label": "CHEBI:57595\nL-histidine zwitterion", "name": "L-histidine zwitterion", "property_value": ["http://purl.obolibrary.org/obo/chebi/monoisotopicmass \"155.06948\" xsd:string", "http://purl.obolibrary.org/obo/chebi/formula \"C6H9N3O2\" xsd:string", "http://purl.obolibrary.org/obo/chebi/charge \"0\" xsd:string", "http://purl.obolibrary.org/obo/chebi/mass \"155.15460\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchi \"InChI=1S/C6H9N3O2/c7-5(6(10)11)1-4-2-8-3-9-4/h2-3,5H,1,7H2,(H,8,9)(H,10,11)/t5-/m0/s1\" xsd:string", "http://purl.obolibrary.org/obo/chebi/smiles \"[NH3+][C@@H](Cc1c[nH]cn1)C([O-])=O\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchikey \"HNDVDQJCIGZPNO-YFKPBYRVSA-N\" xsd:string"], "relationship": ["is_tautomer_of CHEBI:15971"], "shape": "dot", "size": 10, "subset": ["3_STAR"], "title": "CHEBI:57595"}, {"alt_id": ["CHEBI:24598", "CHEBI:43118", "CHEBI:5733"], "color": "#97c2fc", "def": "\"An alpha-amino acid that is propanoic acid bearing an amino substituent at position 2 and a 1H-imidazol-4-yl group at position 3.\" []", "id": "CHEBI:27570", "is_a": ["CHEBI:33704", "CHEBI:24780", "CHEBI:33856", "CHEBI:26167"], "label": "CHEBI:27570\nhistidine", "name": "histidine", "property_value": ["http://purl.obolibrary.org/obo/chebi/monoisotopicmass \"155.06948\" xsd:string", "http://purl.obolibrary.org/obo/chebi/mass \"155.15468\" xsd:string", "http://purl.obolibrary.org/obo/chebi/charge \"0\" xsd:string", "http://purl.obolibrary.org/obo/chebi/formula \"C6H9N3O2\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchikey \"HNDVDQJCIGZPNO-UHFFFAOYSA-N\" xsd:string", "http://purl.obolibrary.org/obo/chebi/smiles \"NC(Cc1c[nH]cn1)C(O)=O\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchi \"InChI=1S/C6H9N3O2/c7-5(6(10)11)1-4-2-8-3-9-4/h2-3,5H,1,7H2,(H,8,9)(H,10,11)\" xsd:string"], "relationship": ["is_conjugate_acid_of CHEBI:32529", "is_conjugate_base_of CHEBI:32531", "has_part CHEBI:50338", "has_role CHEBI:25212"], "shape": "dot", "size": 10, "subset": ["3_STAR"], "title": "CHEBI:27570"}, {"alt_id": ["CHEBI:42063", "CHEBI:4197", "CHEBI:21039"], "color": "#97c2fc", "def": "\"An optically active form of histidine having D-configuration.\" []", "id": "CHEBI:27947", "is_a": ["CHEBI:16733", "CHEBI:27570"], "label": "CHEBI:27947\nD-histidine", "name": "D-histidine", "property_value": ["http://purl.obolibrary.org/obo/chebi/monoisotopicmass \"155.06948\" xsd:string", "http://purl.obolibrary.org/obo/chebi/mass \"155.15468\" xsd:string", "http://purl.obolibrary.org/obo/chebi/charge \"0\" xsd:string", "http://purl.obolibrary.org/obo/chebi/formula \"C6H9N3O2\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchikey \"HNDVDQJCIGZPNO-RXMQYKEDSA-N\" xsd:string", "http://purl.obolibrary.org/obo/chebi/smiles \"N[C@H](Cc1c[nH]cn1)C(O)=O\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchi \"InChI=1S/C6H9N3O2/c7-5(6(10)11)1-4-2-8-3-9-4/h2-3,5H,1,7H2,(H,8,9)(H,10,11)/t5-/m1/s1\" xsd:string"], "relationship": ["is_enantiomer_of CHEBI:15971", "is_conjugate_acid_of CHEBI:32523", "is_conjugate_base_of CHEBI:32526", "has_role CHEBI:75772", "is_tautomer_of CHEBI:142967"], "shape": "dot", "size": 10, "subset": ["3_STAR"], "title": "CHEBI:27947"}, {"color": "#97c2fc", "def": "\"A polar amino acid zwitterion restulting from the transfer of a proton from the carboxy group to the alpha-amino group of D-histidine. The major species at pH 7.3.\" []", "id": "CHEBI:142967", "is_a": ["CHEBI:62031"], "label": "CHEBI:142967\nD-histidine zwitterion", "name": "D-histidine zwitterion", "property_value": ["http://purl.obolibrary.org/obo/chebi/mass \"155.155\" xsd:string", "http://purl.obolibrary.org/obo/chebi/formula \"C6H9N3O2\" xsd:string", "http://purl.obolibrary.org/obo/chebi/monoisotopicmass \"155.06948\" xsd:string", "http://purl.obolibrary.org/obo/chebi/charge \"0\" xsd:string", "http://purl.obolibrary.org/obo/chebi/smiles \"C=1(N=CNC1)C[C@H](C(=O)[O-])[NH3+]\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchi \"InChI=1S/C6H9N3O2/c7-5(6(10)11)1-4-2-8-3-9-4/h2-3,5H,1,7H2,(H,8,9)(H,10,11)/t5-/m1/s1\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchikey \"HNDVDQJCIGZPNO-RXMQYKEDSA-N\" xsd:string"], "relationship": ["is_tautomer_of CHEBI:27947"], "shape": "dot", "size": 10, "subset": ["3_STAR"], "title": "CHEBI:142967"}]);
+                  edges = new vis.DataSet([{"arrows": "to", "from": "CHEBI:32511", "to": "CHEBI:32530", "width": 1}, {"arrows": "to", "from": "CHEBI:32511", "to": "CHEBI:32524", "width": 1}, {"arrows": "to", "from": "CHEBI:32511", "to": "CHEBI:32510", "width": 1}, {"arrows": "to", "from": "CHEBI:32513", "to": "CHEBI:32531", "width": 1}, {"arrows": "to", "from": "CHEBI:32513", "to": "CHEBI:32526", "width": 1}, {"arrows": "to", "from": "CHEBI:32513", "to": "CHEBI:32512", "width": 1}, {"arrows": "to", "from": "CHEBI:32513", "to": "CHEBI:15971", "width": 1}, {"arrows": "to", "from": "CHEBI:32524", "to": "CHEBI:32530", "width": 1}, {"arrows": "to", "from": "CHEBI:32524", "to": "CHEBI:32511", "width": 1}, {"arrows": "to", "from": "CHEBI:32524", "to": "CHEBI:32523", "width": 1}, {"arrows": "to", "from": "CHEBI:32510", "to": "CHEBI:32529", "width": 1}, {"arrows": "to", "from": "CHEBI:32510", "to": "CHEBI:32523", "width": 1}, {"arrows": "to", "from": "CHEBI:32510", "to": "CHEBI:32511", "width": 1}, {"arrows": "to", "from": "CHEBI:32510", "to": "CHEBI:15971", "width": 1}, {"arrows": "to", "from": "CHEBI:32527", "to": "CHEBI:32532", "width": 1}, {"arrows": "to", "from": "CHEBI:32527", "to": "CHEBI:32512", "width": 1}, {"arrows": "to", "from": "CHEBI:32527", "to": "CHEBI:32526", "width": 1}, {"arrows": "to", "from": "CHEBI:57595", "to": "CHEBI:15971", "width": 1}, {"arrows": "to", "from": "CHEBI:27570", "to": "CHEBI:32529", "width": 1}, {"arrows": "to", "from": "CHEBI:27570", "to": "CHEBI:32531", "width": 1}, {"arrows": "to", "from": "CHEBI:32532", "to": "CHEBI:32531", "width": 1}, {"arrows": "to", "from": "CHEBI:15971", "to": "CHEBI:27570", "width": 1}, {"arrows": "to", "from": "CHEBI:15971", "to": "CHEBI:27947", "width": 1}, {"arrows": "to", "from": "CHEBI:15971", "to": "CHEBI:32510", "width": 1}, {"arrows": "to", "from": "CHEBI:15971", "to": "CHEBI:32513", "width": 1}, {"arrows": "to", "from": "CHEBI:15971", "to": "CHEBI:57595", "width": 1}, {"arrows": "to", "from": "CHEBI:142967", "to": "CHEBI:27947", "width": 1}, {"arrows": "to", "from": "CHEBI:27947", "to": "CHEBI:27570", "width": 1}, {"arrows": "to", "from": "CHEBI:27947", "to": "CHEBI:15971", "width": 1}, {"arrows": "to", "from": "CHEBI:27947", "to": "CHEBI:32523", "width": 1}, {"arrows": "to", "from": "CHEBI:27947", "to": "CHEBI:32526", "width": 1}, {"arrows": "to", "from": "CHEBI:27947", "to": "CHEBI:142967", "width": 1}, {"arrows": "to", "from": "CHEBI:32512", "to": "CHEBI:32532", "width": 1}, {"arrows": "to", "from": "CHEBI:32512", "to": "CHEBI:32527", "width": 1}, {"arrows": "to", "from": "CHEBI:32512", "to": "CHEBI:32513", "width": 1}, {"arrows": "to", "from": "CHEBI:32530", "to": "CHEBI:32529", "width": 1}, {"arrows": "to", "from": "CHEBI:32529", "to": "CHEBI:32530", "width": 1}, {"arrows": "to", "from": "CHEBI:32529", "to": "CHEBI:27570", "width": 1}, {"arrows": "to", "from": "CHEBI:32531", "to": "CHEBI:27570", "width": 1}, {"arrows": "to", "from": "CHEBI:32531", "to": "CHEBI:32532", "width": 1}, {"arrows": "to", "from": "CHEBI:32526", "to": "CHEBI:32531", "width": 1}, {"arrows": "to", "from": "CHEBI:32526", "to": "CHEBI:32513", "width": 1}, {"arrows": "to", "from": "CHEBI:32526", "to": "CHEBI:27947", "width": 1}, {"arrows": "to", "from": "CHEBI:32526", "to": "CHEBI:32527", "width": 1}, {"arrows": "to", "from": "CHEBI:32523", "to": "CHEBI:32529", "width": 1}, {"arrows": "to", "from": "CHEBI:32523", "to": "CHEBI:32510", "width": 1}, {"arrows": "to", "from": "CHEBI:32523", "to": "CHEBI:32524", "width": 1}, {"arrows": "to", "from": "CHEBI:32523", "to": "CHEBI:27947", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

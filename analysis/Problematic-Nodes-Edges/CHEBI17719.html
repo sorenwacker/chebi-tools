@@ -1,0 +1,155 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 1000px;
+                 height: 800px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "id": "CHEBI:47944", "is_a": ["CHEBI:4141"], "label": "CHEBI:47944\nalpha-D-galactose 6-phosphate", "name": "alpha-D-galactose 6-phosphate", "property_value": ["http://purl.obolibrary.org/obo/chebi/formula \"C6H13O9P\" xsd:string", "http://purl.obolibrary.org/obo/chebi/mass \"260.13578\" xsd:string", "http://purl.obolibrary.org/obo/chebi/monoisotopicmass \"260.02972\" xsd:string", "http://purl.obolibrary.org/obo/chebi/charge \"0\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchikey \"NBSCHQHZLSJFNQ-PHYPRBDBSA-N\" xsd:string", "http://purl.obolibrary.org/obo/chebi/smiles \"O[C@H]1O[C@H](COP(O)(O)=O)[C@H](O)[C@H](O)[C@H]1O\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchi \"InChI=1S/C6H13O9P/c7-3-2(1-14-16(11,12)13)15-6(10)5(9)4(3)8/h2-10H,1H2,(H2,11,12,13)/t2-,3+,4+,5-,6+/m1/s1\" xsd:string"], "shape": "dot", "size": 10, "subset": ["3_STAR"], "title": "CHEBI:47944"}, {"color": "#97c2fc", "def": "\"The pyranose form of D-galactose 6-phosphate.\" []", "id": "CHEBI:4141", "is_a": ["CHEBI:12937", "CHEBI:61667"], "label": "CHEBI:4141\nD-galactopyranose 6-phosphate", "name": "D-galactopyranose 6-phosphate", "property_value": ["http://purl.obolibrary.org/obo/chebi/formula \"C6H13O9P\" xsd:string", "http://purl.obolibrary.org/obo/chebi/monoisotopicmass \"260.02972\" xsd:string", "http://purl.obolibrary.org/obo/chebi/mass \"260.13578\" xsd:string", "http://purl.obolibrary.org/obo/chebi/charge \"0\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchikey \"NBSCHQHZLSJFNQ-SVZMEOIVSA-N\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchi \"InChI=1S/C6H13O9P/c7-3-2(1-14-16(11,12)13)15-6(10)5(9)4(3)8/h2-10H,1H2,(H2,11,12,13)/t2-,3+,4+,5-,6?/m1/s1\" xsd:string", "http://purl.obolibrary.org/obo/chebi/smiles \"OC1O[C@H](COP(O)(O)=O)[C@H](O)[C@H](O)[C@H]1O\" xsd:string"], "relationship": ["has_role CHEBI:25212", "is_conjugate_acid_of CHEBI:91004"], "shape": "dot", "size": 10, "subset": ["3_STAR"], "title": "CHEBI:4141"}, {"alt_id": ["CHEBI:49724", "CHEBI:48067"], "color": "#97c2fc", "def": "\"A D-mannopyranose 6-phosphate with a beta-configuration at the anomeric position.\" []", "id": "CHEBI:49728", "is_a": ["CHEBI:48066"], "label": "CHEBI:49728\nbeta-D-mannose 6-phosphate", "name": "beta-D-mannose 6-phosphate", "property_value": ["http://purl.obolibrary.org/obo/chebi/monoisotopicmass \"260.02972\" xsd:string", "http://purl.obolibrary.org/obo/chebi/formula \"C6H13O9P\" xsd:string", "http://purl.obolibrary.org/obo/chebi/mass \"260.13578\" xsd:string", "http://purl.obolibrary.org/obo/chebi/charge \"0\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchikey \"NBSCHQHZLSJFNQ-RWOPYEJCSA-N\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchi \"InChI=1S/C6H13O9P/c7-3-2(1-14-16(11,12)13)15-6(10)5(9)4(3)8/h2-10H,1H2,(H2,11,12,13)/t2-,3-,4+,5+,6-/m1/s1\" xsd:string", "http://purl.obolibrary.org/obo/chebi/smiles \"O[C@@H]1O[C@H](COP(O)(O)=O)[C@@H](O)[C@H](O)[C@@H]1O\" xsd:string"], "shape": "dot", "size": 10, "subset": ["3_STAR"], "title": "CHEBI:49728"}, {"color": "#97c2fc", "def": "\"The pyranose form of D-mannose 6-phosphate.\" []", "id": "CHEBI:48066", "is_a": ["CHEBI:17369", "CHEBI:61667"], "label": "CHEBI:48066\nD-mannopyranose 6-phosphate", "name": "D-mannopyranose 6-phosphate", "property_value": ["http://purl.obolibrary.org/obo/chebi/formula \"C6H13O9P\" xsd:string", "http://purl.obolibrary.org/obo/chebi/mass \"260.13578\" xsd:string", "http://purl.obolibrary.org/obo/chebi/monoisotopicmass \"260.02972\" xsd:string", "http://purl.obolibrary.org/obo/chebi/charge \"0\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchikey \"NBSCHQHZLSJFNQ-QTVWNMPRSA-N\" xsd:string", "http://purl.obolibrary.org/obo/chebi/smiles \"OC1O[C@H](COP(O)(O)=O)[C@@H](O)[C@H](O)[C@@H]1O\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchi \"InChI=1S/C6H13O9P/c7-3-2(1-14-16(11,12)13)15-6(10)5(9)4(3)8/h2-10H,1H2,(H2,11,12,13)/t2-,3-,4+,5+,6?/m1/s1\" xsd:string"], "relationship": ["is_conjugate_acid_of CHEBI:58735"], "shape": "dot", "size": 10, "subset": ["3_STAR"], "title": "CHEBI:48066"}, {"color": "#97c2fc", "def": "\"Any D-hexose 6-phosphate in which the hexose is in the pyranose form.\" []", "id": "CHEBI:61667", "is_a": ["CHEBI:4195"], "label": "CHEBI:61667\nD-hexopyranose 6-phosphate", "name": "D-hexopyranose 6-phosphate", "property_value": ["http://purl.obolibrary.org/obo/chebi/formula \"C6H13O9P\" xsd:string", "http://purl.obolibrary.org/obo/chebi/mass \"260.13580\" xsd:string", "http://purl.obolibrary.org/obo/chebi/monoisotopicmass \"260.02972\" xsd:string", "http://purl.obolibrary.org/obo/chebi/charge \"0\" xsd:string", "http://purl.obolibrary.org/obo/chebi/smiles \"OC1O[C@H](COP(O)(O)=O)C(O)C(O)C1O\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchikey \"NBSCHQHZLSJFNQ-KNZZERQRSA-N\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchi \"InChI=1S/C6H13O9P/c7-3-2(1-14-16(11,12)13)15-6(10)5(9)4(3)8/h2-10H,1H2,(H2,11,12,13)/t2-,3?,4?,5?,6?/m1/s1\" xsd:string"], "relationship": ["is_conjugate_acid_of CHEBI:61567"], "shape": "dot", "size": 10, "subset": ["3_STAR"], "title": "CHEBI:61667"}, {"color": "#97c2fc", "def": "\"The organophosphate oxoanion formed from D-hexopyranose 6-phosphate by loss of two protons from the phosphate group; principal species at pH 7.3.\" []", "id": "CHEBI:61567", "is_a": ["CHEBI:58945"], "label": "CHEBI:61567\nD-hexopyranose 6-phosphate(2-)", "name": "D-hexopyranose 6-phosphate(2-)", "property_value": ["http://purl.obolibrary.org/obo/chebi/mass \"258.11990\" xsd:string", "http://purl.obolibrary.org/obo/chebi/monoisotopicmass \"258.01517\" xsd:string", "http://purl.obolibrary.org/obo/chebi/charge \"-2\" xsd:string", "http://purl.obolibrary.org/obo/chebi/formula \"C6H11O9P\" xsd:string", "http://purl.obolibrary.org/obo/chebi/smiles \"OC1O[C@H](COP([O-])([O-])=O)C(O)C(O)C1O\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchi \"InChI=1S/C6H13O9P/c7-3-2(1-14-16(11,12)13)15-6(10)5(9)4(3)8/h2-10H,1H2,(H2,11,12,13)/p-2/t2-,3?,4?,5?,6?/m1/s1\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchikey \"NBSCHQHZLSJFNQ-KNZZERQRSA-L\" xsd:string"], "relationship": ["is_conjugate_base_of CHEBI:61667"], "shape": "dot", "size": 10, "subset": ["3_STAR"], "title": "CHEBI:61567"}, {"color": "#97c2fc", "def": "\"A D-hexopyranose 6-phosphate(2-) that is the dianion of D-mannopyranose 6-phosphate arising from deprotonation of the phosphate function.\" []", "id": "CHEBI:58735", "is_a": ["CHEBI:61567"], "label": "CHEBI:58735\nD-mannopyranose 6-phosphate(2-)", "name": "D-mannopyranose 6-phosphate(2-)", "property_value": ["http://purl.obolibrary.org/obo/chebi/mass \"258.11990\" xsd:string", "http://purl.obolibrary.org/obo/chebi/monoisotopicmass \"258.01407\" xsd:string", "http://purl.obolibrary.org/obo/chebi/charge \"-2\" xsd:string", "http://purl.obolibrary.org/obo/chebi/formula \"C6H11O9P\" xsd:string", "http://purl.obolibrary.org/obo/chebi/smiles \"OC1O[C@H](COP([O-])([O-])=O)[C@@H](O)[C@H](O)[C@@H]1O\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchi \"InChI=1S/C6H13O9P/c7-3-2(1-14-16(11,12)13)15-6(10)5(9)4(3)8/h2-10H,1H2,(H2,11,12,13)/p-2/t2-,3-,4+,5+,6?/m1/s1\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchikey \"NBSCHQHZLSJFNQ-QTVWNMPRSA-L\" xsd:string"], "relationship": ["is_conjugate_base_of CHEBI:48066", "has_role CHEBI:78675"], "shape": "dot", "size": 10, "subset": ["3_STAR"], "title": "CHEBI:58735"}, {"color": "#97c2fc", "def": "\"A D-hexopyranose 6-phosphate that is the 6-monophospho derivative of 2-deoxy-D-glucopyranose.\" []", "id": "CHEBI:84756", "is_a": ["CHEBI:61667"], "label": "CHEBI:84756\n2-deoxy-D-glucopyranose 6-phosphate", "name": "2-deoxy-D-glucopyranose 6-phosphate", "property_value": ["http://purl.obolibrary.org/obo/chebi/monoisotopicmass \"244.03480\" xsd:string", "http://purl.obolibrary.org/obo/chebi/formula \"C6H13O8P\" xsd:string", "http://purl.obolibrary.org/obo/chebi/charge \"0\" xsd:string", "http://purl.obolibrary.org/obo/chebi/mass \"244.13640\" xsd:string", "http://purl.obolibrary.org/obo/chebi/smiles \"OC1C[C@@H](O)[C@H](O)[C@@H](COP(O)(O)=O)O1\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchi \"InChI=1S/C6H13O8P/c7-3-1-5(8)14-4(6(3)9)2-13-15(10,11)12/h3-9H,1-2H2,(H2,10,11,12)/t3-,4-,5?,6+/m1/s1\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchikey \"UQJFZAAGZAYVKZ-CERMHHMHSA-N\" xsd:string"], "relationship": ["is_conjugate_acid_of CHEBI:84760"], "shape": "dot", "size": 10, "subset": ["3_STAR"], "title": "CHEBI:84756"}, {"color": "#97c2fc", "def": "\"An organophosphate oxoanion resulting from the deprotonation of the phosphate OH groups of 2-deoxy-D-glucopyranose 6-phosphate; major species at pH 7.3.\" []", "id": "CHEBI:84760", "is_a": ["CHEBI:58945"], "label": "CHEBI:84760\n2-deoxy-D-glucopyranose 6-phosphate(2-)", "name": "2-deoxy-D-glucopyranose 6-phosphate(2-)", "property_value": ["http://purl.obolibrary.org/obo/chebi/mass \"242.12160\" xsd:string", "http://purl.obolibrary.org/obo/chebi/monoisotopicmass \"242.02025\" xsd:string", "http://purl.obolibrary.org/obo/chebi/formula \"C6H11O8P\" xsd:string", "http://purl.obolibrary.org/obo/chebi/charge \"-2\" xsd:string", "http://purl.obolibrary.org/obo/chebi/smiles \"OC1C[C@@H](O)[C@H](O)[C@@H](COP([O-])([O-])=O)O1\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchi \"InChI=1S/C6H13O8P/c7-3-1-5(8)14-4(6(3)9)2-13-15(10,11)12/h3-9H,1-2H2,(H2,10,11,12)/p-2/t3-,4-,5?,6+/m1/s1\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchikey \"UQJFZAAGZAYVKZ-CERMHHMHSA-L\" xsd:string"], "relationship": ["is_conjugate_base_of CHEBI:84756"], "shape": "dot", "size": 10, "subset": ["3_STAR"], "title": "CHEBI:84760"}, {"color": "#97c2fc", "def": "\"An organophosphate oxoanion resulting from deprotonation of the phosphate OH groups of D-glucopyranose 6-phosphate; major species at pH 7.3.\" []", "id": "CHEBI:61548", "is_a": ["CHEBI:61567"], "label": "CHEBI:61548\nD-glucopyranose 6-phosphate(2-)", "name": "D-glucopyranose 6-phosphate(2-)", "property_value": ["http://purl.obolibrary.org/obo/chebi/mass \"258.11990\" xsd:string", "http://purl.obolibrary.org/obo/chebi/monoisotopicmass \"258.01517\" xsd:string", "http://purl.obolibrary.org/obo/chebi/charge \"-2\" xsd:string", "http://purl.obolibrary.org/obo/chebi/formula \"C6H11O9P\" xsd:string", "http://purl.obolibrary.org/obo/chebi/smiles \"OC1O[C@H](COP([O-])([O-])=O)[C@@H](O)[C@H](O)[C@H]1O\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchi \"InChI=1S/C6H13O9P/c7-3-2(1-14-16(11,12)13)15-6(10)5(9)4(3)8/h2-10H,1H2,(H2,11,12,13)/p-2/t2-,3-,4+,5-,6?/m1/s1\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchikey \"NBSCHQHZLSJFNQ-GASJEMHNSA-L\" xsd:string"], "relationship": ["has_functional_parent CHEBI:4167", "is_conjugate_base_of CHEBI:4170", "has_role CHEBI:77746"], "shape": "dot", "size": 10, "subset": ["3_STAR"], "title": "CHEBI:61548"}, {"color": "#97c2fc", "def": "\"A glucopyranose ring with a phosphate replacing the hydroxy in the hydroxymethyl group at position 6.\" []", "id": "CHEBI:4170", "is_a": ["CHEBI:14314", "CHEBI:61667"], "label": "CHEBI:4170\nD-glucopyranose 6-phosphate", "name": "D-glucopyranose 6-phosphate", "property_value": ["http://purl.obolibrary.org/obo/chebi/formula \"C6H13O9P\" xsd:string", "http://purl.obolibrary.org/obo/chebi/monoisotopicmass \"260.02972\" xsd:string", "http://purl.obolibrary.org/obo/chebi/mass \"260.13578\" xsd:string", "http://purl.obolibrary.org/obo/chebi/charge \"0\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchi \"InChI=1S/C6H13O9P/c7-3-2(1-14-16(11,12)13)15-6(10)5(9)4(3)8/h2-10H,1H2,(H2,11,12,13)/t2-,3-,4+,5-,6?/m1/s1\" xsd:string", "http://purl.obolibrary.org/obo/chebi/smiles \"OC1O[C@H](COP(O)(O)=O)[C@@H](O)[C@H](O)[C@H]1O\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchikey \"NBSCHQHZLSJFNQ-GASJEMHNSA-N\" xsd:string"], "relationship": ["has_functional_parent CHEBI:4167", "is_conjugate_acid_of CHEBI:61548"], "shape": "dot", "size": 10, "subset": ["3_STAR"], "title": "CHEBI:4170"}, {"alt_id": ["CHEBI:10399", "CHEBI:12375", "CHEBI:22797", "CHEBI:41041"], "color": "#97c2fc", "def": "\"A D-glucopyranose 6-phosphate in which the anomeric centre has beta-configuration.\" []", "id": "CHEBI:17719", "is_a": ["CHEBI:4170"], "label": "CHEBI:17719\nbeta-D-glucose 6-phosphate", "name": "beta-D-glucose 6-phosphate", "property_value": ["http://purl.obolibrary.org/obo/chebi/mass \"260.13578\" xsd:string", "http://purl.obolibrary.org/obo/chebi/monoisotopicmass \"260.02972\" xsd:string", "http://purl.obolibrary.org/obo/chebi/charge \"0\" xsd:string", "http://purl.obolibrary.org/obo/chebi/formula \"C6H13O9P\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchikey \"NBSCHQHZLSJFNQ-VFUOTHLCSA-N\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchi \"InChI=1S/C6H13O9P/c7-3-2(1-14-16(11,12)13)15-6(10)5(9)4(3)8/h2-10H,1H2,(H2,11,12,13)/t2-,3-,4+,5-,6-/m1/s1\" xsd:string", "http://purl.obolibrary.org/obo/chebi/smiles \"O[C@@H]1O[C@H](COP(O)(O)=O)[C@@H](O)[C@H](O)[C@H]1O\" xsd:string"], "relationship": ["has_functional_parent CHEBI:15903", "is_conjugate_acid_of CHEBI:58247", "has_role CHEBI:53000", "has_role CHEBI:75771"], "shape": "dot", "size": 10, "subset": ["3_STAR"], "title": "CHEBI:17719"}, {"color": "#97c2fc", "def": "\"A doubly-charged organophosphate oxoanion arising from deprotonation of the phosphate OH groups of beta-D-glucose 6-phosphate; major species at pH 7.3.\" []", "id": "CHEBI:58247", "is_a": ["CHEBI:58945"], "label": "CHEBI:58247\nbeta-D-glucose 6-phosphate(2-)", "name": "beta-D-glucose 6-phosphate(2-)", "property_value": ["http://purl.obolibrary.org/obo/chebi/mass \"258.11990\" xsd:string", "http://purl.obolibrary.org/obo/chebi/monoisotopicmass \"258.01407\" xsd:string", "http://purl.obolibrary.org/obo/chebi/charge \"-2\" xsd:string", "http://purl.obolibrary.org/obo/chebi/formula \"C6H11O9P\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchi \"InChI=1S/C6H13O9P/c7-3-2(1-14-16(11,12)13)15-6(10)5(9)4(3)8/h2-10H,1H2,(H2,11,12,13)/p-2/t2-,3-,4+,5-,6-/m1/s1\" xsd:string", "http://purl.obolibrary.org/obo/chebi/smiles \"O[C@@H]1O[C@H](COP([O-])([O-])=O)[C@@H](O)[C@H](O)[C@H]1O\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchikey \"NBSCHQHZLSJFNQ-VFUOTHLCSA-L\" xsd:string"], "relationship": ["is_conjugate_base_of CHEBI:17719", "has_role CHEBI:78675"], "shape": "dot", "size": 10, "subset": ["3_STAR"], "title": "CHEBI:58247"}, {"alt_id": ["CHEBI:10245", "CHEBI:22389", "CHEBI:42748", "CHEBI:12321"], "color": "#97c2fc", "def": "\"A D-glucopyranose 6-phosphate where alpha-D-glucose is the sugar component.\" []", "id": "CHEBI:17665", "is_a": ["CHEBI:4170"], "label": "CHEBI:17665\nalpha-D-glucose 6-phosphate", "name": "alpha-D-glucose 6-phosphate", "property_value": ["http://purl.obolibrary.org/obo/chebi/monoisotopicmass \"260.02972\" xsd:string", "http://purl.obolibrary.org/obo/chebi/mass \"260.13578\" xsd:string", "http://purl.obolibrary.org/obo/chebi/charge \"0\" xsd:string", "http://purl.obolibrary.org/obo/chebi/formula \"C6H13O9P\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchikey \"NBSCHQHZLSJFNQ-DVKNGEFBSA-N\" xsd:string", "http://purl.obolibrary.org/obo/chebi/smiles \"O[C@H]1O[C@H](COP(O)(O)=O)[C@@H](O)[C@H](O)[C@H]1O\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchi \"InChI=1S/C6H13O9P/c7-3-2(1-14-16(11,12)13)15-6(10)5(9)4(3)8/h2-10H,1H2,(H2,11,12,13)/t2-,3-,4+,5-,6+/m1/s1\" xsd:string"], "relationship": ["has_functional_parent CHEBI:17925", "is_conjugate_acid_of CHEBI:58225", "has_role CHEBI:75771"], "shape": "dot", "size": 10, "subset": ["3_STAR"], "title": "CHEBI:17665"}, {"color": "#97c2fc", "def": "\"A D-glucopyranose 6-phosphate(2-) obtaned by deprotonation of the phosphate OH groups of alpha-D-glucose 6-phosphate; major species at pH 7.3.\" []", "id": "CHEBI:58225", "is_a": ["CHEBI:61548"], "label": "CHEBI:58225\nalpha-D-glucose 6-phosphate(2-)", "name": "alpha-D-glucose 6-phosphate(2-)", "property_value": ["http://purl.obolibrary.org/obo/chebi/mass \"258.11990\" xsd:string", "http://purl.obolibrary.org/obo/chebi/monoisotopicmass \"258.01407\" xsd:string", "http://purl.obolibrary.org/obo/chebi/charge \"-2\" xsd:string", "http://purl.obolibrary.org/obo/chebi/formula \"C6H11O9P\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchikey \"NBSCHQHZLSJFNQ-DVKNGEFBSA-L\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchi \"InChI=1S/C6H13O9P/c7-3-2(1-14-16(11,12)13)15-6(10)5(9)4(3)8/h2-10H,1H2,(H2,11,12,13)/p-2/t2-,3-,4+,5-,6+/m1/s1\" xsd:string", "http://purl.obolibrary.org/obo/chebi/smiles \"O[C@H]1O[C@H](COP([O-])([O-])=O)[C@@H](O)[C@H](O)[C@H]1O\" xsd:string"], "relationship": ["is_conjugate_base_of CHEBI:17665", "has_role CHEBI:78675"], "shape": "dot", "size": 10, "subset": ["3_STAR"], "title": "CHEBI:58225"}, {"color": "#97c2fc", "def": "\"A D-glucopyranose 6-phosphate(2-) resulting from deprotonation of the phosphate OH groups of D-galactopyranose 6-phosphate; major species at pH 7.3.\" []", "id": "CHEBI:91004", "is_a": ["CHEBI:61567"], "label": "CHEBI:91004\nD-galactopyranose 6-phosphate(2-)", "name": "D-galactopyranose 6-phosphate(2-)", "property_value": ["http://purl.obolibrary.org/obo/chebi/monoisotopicmass \"258.01517\" xsd:string", "http://purl.obolibrary.org/obo/chebi/mass \"258.120\" xsd:string", "http://purl.obolibrary.org/obo/chebi/charge \"-2\" xsd:string", "http://purl.obolibrary.org/obo/chebi/formula \"C6H11O9P\" xsd:string", "http://purl.obolibrary.org/obo/chebi/smiles \"[C@H]1(O)C(O)O[C@H](COP(=O)([O-])[O-])[C@H](O)[C@@H]1O\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchi \"InChI=1S/C6H13O9P/c7-3-2(1-14-16(11,12)13)15-6(10)5(9)4(3)8/h2-10H,1H2,(H2,11,12,13)/p-2/t2-,3+,4+,5-,6?/m1/s1\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchikey \"NBSCHQHZLSJFNQ-SVZMEOIVSA-L\" xsd:string"], "relationship": ["is_conjugate_base_of CHEBI:4141"], "shape": "dot", "size": 10, "subset": ["3_STAR"], "title": "CHEBI:91004"}, {"color": "#97c2fc", "id": "CHEBI:41076", "is_a": ["CHEBI:4141"], "label": "CHEBI:41076\nbeta-D-galactose 6-phosphate", "name": "beta-D-galactose 6-phosphate", "property_value": ["http://purl.obolibrary.org/obo/chebi/formula \"C6H13O9P\" xsd:string", "http://purl.obolibrary.org/obo/chebi/mass \"260.13578\" xsd:string", "http://purl.obolibrary.org/obo/chebi/monoisotopicmass \"260.02972\" xsd:string", "http://purl.obolibrary.org/obo/chebi/charge \"0\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchi \"InChI=1S/C6H13O9P/c7-3-2(1-14-16(11,12)13)15-6(10)5(9)4(3)8/h2-10H,1H2,(H2,11,12,13)/t2-,3+,4+,5-,6-/m1/s1\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchikey \"NBSCHQHZLSJFNQ-FPRJBGLDSA-N\" xsd:string", "http://purl.obolibrary.org/obo/chebi/smiles \"O[C@@H]1O[C@H](COP(O)(O)=O)[C@H](O)[C@H](O)[C@H]1O\" xsd:string"], "shape": "dot", "size": 10, "subset": ["3_STAR"], "title": "CHEBI:41076"}, {"color": "#97c2fc", "def": "\"Dianion of alpha-D-mannose 6-phosphate; major species at pH 7.3.\" []", "id": "CHEBI:60332", "is_a": ["CHEBI:58945"], "label": "CHEBI:60332\nalpha-D-mannose 6-phosphate(2-)", "name": "alpha-D-mannose 6-phosphate(2-)", "property_value": ["http://purl.obolibrary.org/obo/chebi/mass \"258.11990\" xsd:string", "http://purl.obolibrary.org/obo/chebi/monoisotopicmass \"258.01517\" xsd:string", "http://purl.obolibrary.org/obo/chebi/charge \"-2\" xsd:string", "http://purl.obolibrary.org/obo/chebi/formula \"C6H11O9P\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchi \"InChI=1S/C6H13O9P/c7-3-2(1-14-16(11,12)13)15-6(10)5(9)4(3)8/h2-10H,1H2,(H2,11,12,13)/p-2/t2-,3-,4+,5+,6+/m1/s1\" xsd:string", "http://purl.obolibrary.org/obo/chebi/smiles \"O[C@H]1O[C@H](COP([O-])([O-])=O)[C@@H](O)[C@H](O)[C@@H]1O\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchikey \"NBSCHQHZLSJFNQ-PQMKYFCFSA-L\" xsd:string"], "relationship": ["is_conjugate_base_of CHEBI:43896", "has_role CHEBI:78675"], "shape": "dot", "size": 10, "subset": ["3_STAR"], "title": "CHEBI:60332"}, {"alt_id": ["CHEBI:43894", "CHEBI:12328"], "color": "#97c2fc", "def": "\"The alpha-anomer of D-mannose 6-phosphate.\" []", "id": "CHEBI:43896", "is_a": ["CHEBI:48066"], "label": "CHEBI:43896\nalpha-D-mannose 6-phosphate", "name": "alpha-D-mannose 6-phosphate", "property_value": ["http://purl.obolibrary.org/obo/chebi/monoisotopicmass \"260.02972\" xsd:string", "http://purl.obolibrary.org/obo/chebi/formula \"C6H13O9P\" xsd:string", "http://purl.obolibrary.org/obo/chebi/mass \"260.13578\" xsd:string", "http://purl.obolibrary.org/obo/chebi/charge \"0\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchikey \"NBSCHQHZLSJFNQ-PQMKYFCFSA-N\" xsd:string", "http://purl.obolibrary.org/obo/chebi/smiles \"O[C@H]1O[C@H](COP(O)(O)=O)[C@@H](O)[C@H](O)[C@@H]1O\" xsd:string", "http://purl.obolibrary.org/obo/chebi/inchi \"InChI=1S/C6H13O9P/c7-3-2(1-14-16(11,12)13)15-6(10)5(9)4(3)8/h2-10H,1H2,(H2,11,12,13)/t2-,3-,4+,5+,6+/m1/s1\" xsd:string"], "relationship": ["is_conjugate_acid_of CHEBI:60332", "has_role CHEBI:53000", "has_functional_parent CHEBI:28729"], "shape": "dot", "size": 10, "subset": ["3_STAR"], "title": "CHEBI:43896"}]);
+                  edges = new vis.DataSet([{"arrows": "to", "from": "CHEBI:47944", "to": "CHEBI:4141", "width": 1}, {"arrows": "to", "from": "CHEBI:49728", "to": "CHEBI:48066", "width": 1}, {"arrows": "to", "from": "CHEBI:61667", "to": "CHEBI:61567", "width": 1}, {"arrows": "to", "from": "CHEBI:48066", "to": "CHEBI:61667", "width": 1}, {"arrows": "to", "from": "CHEBI:48066", "to": "CHEBI:58735", "width": 1}, {"arrows": "to", "from": "CHEBI:84756", "to": "CHEBI:61667", "width": 1}, {"arrows": "to", "from": "CHEBI:84756", "to": "CHEBI:84760", "width": 1}, {"arrows": "to", "from": "CHEBI:61548", "to": "CHEBI:61567", "width": 1}, {"arrows": "to", "from": "CHEBI:61548", "to": "CHEBI:4170", "width": 1}, {"arrows": "to", "from": "CHEBI:17719", "to": "CHEBI:4170", "width": 1}, {"arrows": "to", "from": "CHEBI:17719", "to": "CHEBI:58247", "width": 1}, {"arrows": "to", "from": "CHEBI:17665", "to": "CHEBI:4170", "width": 1}, {"arrows": "to", "from": "CHEBI:17665", "to": "CHEBI:58225", "width": 1}, {"arrows": "to", "from": "CHEBI:91004", "to": "CHEBI:61567", "width": 1}, {"arrows": "to", "from": "CHEBI:91004", "to": "CHEBI:4141", "width": 1}, {"arrows": "to", "from": "CHEBI:4170", "to": "CHEBI:61667", "width": 1}, {"arrows": "to", "from": "CHEBI:4170", "to": "CHEBI:61548", "width": 1}, {"arrows": "to", "from": "CHEBI:41076", "to": "CHEBI:4141", "width": 1}, {"arrows": "to", "from": "CHEBI:60332", "to": "CHEBI:43896", "width": 1}, {"arrows": "to", "from": "CHEBI:61567", "to": "CHEBI:61667", "width": 1}, {"arrows": "to", "from": "CHEBI:4141", "to": "CHEBI:61667", "width": 1}, {"arrows": "to", "from": "CHEBI:4141", "to": "CHEBI:91004", "width": 1}, {"arrows": "to", "from": "CHEBI:58735", "to": "CHEBI:61567", "width": 1}, {"arrows": "to", "from": "CHEBI:58735", "to": "CHEBI:48066", "width": 1}, {"arrows": "to", "from": "CHEBI:84760", "to": "CHEBI:84756", "width": 1}, {"arrows": "to", "from": "CHEBI:43896", "to": "CHEBI:48066", "width": 1}, {"arrows": "to", "from": "CHEBI:43896", "to": "CHEBI:60332", "width": 1}, {"arrows": "to", "from": "CHEBI:58247", "to": "CHEBI:17719", "width": 1}, {"arrows": "to", "from": "CHEBI:58225", "to": "CHEBI:61548", "width": 1}, {"arrows": "to", "from": "CHEBI:58225", "to": "CHEBI:17665", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
