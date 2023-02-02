@@ -36,17 +36,26 @@ class ChEBIStandardizer:
         self._process_many = np.vectorize(self.process)
 
     def load_data(self):
+        '''
+        Load all required data for the ChEBIStandardizer.
+        '''
         self.load_names()
         self.load_reference_data()
         self.load_smiles()
 
     def load_smiles(self):
+        '''
+        Loads the smiles data from the smiles.parquet file, or creates the file if it doesn't exist.
+        '''
         fn = self.files["smiles"]
         if not fn.is_file():
             self.create_smiles()
         self.smiles = pd.read_parquet(fn)
 
     def load_names(self):
+        '''
+        Loads the names data from the names.tsv and structures.tsv files and prepares the names data for use.
+        '''
         # To get all synonyms, the names from names.tsv and structures.tsv need to be combined
         names_from_compounds = (
             pd.read_parquet(self.files["compounds"])[
@@ -80,6 +89,9 @@ class ChEBIStandardizer:
         self.names = names
 
     def load_reference_data(self, fn=None):
+        '''
+        Loads the reference chebi data.
+        '''
         if fn is None:
             fn = DATA_PATH/'reference-chebis.parquet'
         reference_chebi = (
@@ -92,6 +104,9 @@ class ChEBIStandardizer:
         self.reference_chebi = reference_chebi
 
     def create_smiles(self):
+        '''
+        Creates the smiles.parquet file from the structures.tsv file.
+        '''
         print("Preparing smiles.parquet")
         fn = self.files["smiles"]
         structures = pd.read_parquet(self.files["structures"])
@@ -101,6 +116,10 @@ class ChEBIStandardizer:
         smiles.to_parquet(fn)
 
     def get(self, token):
+        '''
+        Gets the CHEBI entry based on token (name or ChEBI ID).
+
+        '''
         token = self._process_token(token)
 
         match token:
@@ -110,12 +129,22 @@ class ChEBIStandardizer:
                 return self.names.loc[token.lower()]
 
     def get_by_id(self, compound_id: int):
+        '''
+        Get entries in names based on ChEMBL id (int)
+        '''
         return self.names[self.names.COMPOUND_ID == compound_id]
 
     def get_by_name(self, name: str):
+        '''
+        Get entries in names based on compound name (str)
+        '''        
         return self.names[self.names.NAME.str.lower() == name.lower()]
 
     def search(self, query: str):
+        '''
+        Tries to get the entry form names table. If no direct match it applies
+        fuzzy search using Levenshtein similarity.
+        ''' 
         if query.lower() in self.names.NAME_lowercase.to_list():
             exact_match = True
             name = self.names.set_index("NAME_lowercase").loc[query.lower()]
@@ -134,9 +163,15 @@ class ChEBIStandardizer:
         return name, exact_match
 
     def distance(self, string_a, string_b):
+        '''
+        Calculates the similarity of two strings.
+        '''
         return Levenshtein.distance(string_a, string_b)
 
     def get_chebi_reference(self, token):
+        '''
+        Finds the ChEBI reference for a token (name or ChEBI ID)
+        '''
         token = self._process_token(token)
 
         match token:
