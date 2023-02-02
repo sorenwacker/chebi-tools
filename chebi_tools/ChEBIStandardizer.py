@@ -8,6 +8,7 @@ from pathlib import Path as P
 
 from .ChEBIDownloader import ChEBIDownloader
 
+DATA_PATH = P(__file__).parent.parent/'data'
 
 class ChEBIStandardizer:
     """
@@ -80,16 +81,11 @@ class ChEBIStandardizer:
 
     def load_reference_data(self, fn=None):
         if fn is None:
-            fn = '/home/swacker/workspace/chebi-tools/reference-chebis.parquet'
+            fn = DATA_PATH/'reference-chebis.parquet'
         reference_chebi = (
             pd.read_parquet(fn)
-            .dropna()
-            .reset_index()
         )
         reference_chebi.columns = ["CHEBI", "REF_CHEBI", "REF_NAME"]
-        #reference_chebi["ChEBI"] = reference_chebi["ChEBI"].str.replace(
-        #    "CHEBI", "ChEBI"
-        #)
         reference_chebi.index = reference_chebi["CHEBI"].apply(
             lambda x: int(x.lower().replace("chebi:", ""))
         )
@@ -165,7 +161,7 @@ class ChEBIStandardizer:
 
     def _process_token(self, token):
         if isinstance(token, str):
-            token = token.lower().replace("chebi:", "")
+            token = token.lower().replace("chebi:", "").strip()
             if token.isnumeric():
                 token = int(token)
         return token
