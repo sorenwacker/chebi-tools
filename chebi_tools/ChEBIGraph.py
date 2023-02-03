@@ -188,7 +188,11 @@ class ChEBIGraph:
         return result
 
     def get_property_from_node(self, token, prop="smiles"):
-        properties = self.G.nodes[token]["property_value"]
+        node = self.G.nodes[token]
+        if "property_value" in node:
+            properties = self.G.nodes[token]["property_value"]
+        else:
+            return None
         value = None
         for string in properties:
             if "/" + prop + " " in string:
@@ -211,8 +215,8 @@ class ChEBIGraph:
             return grp.index[0], grp.name[0]
         return None, None
 
-    def get_group(self, token):
-        H = self.get_subgraph(token)
+    def get_group(self, **kwargs):
+        H = self.get_subgraph(**kwargs)
         return list(H.nodes)
 
     @property
