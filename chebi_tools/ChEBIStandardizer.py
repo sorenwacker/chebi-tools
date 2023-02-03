@@ -121,12 +121,12 @@ class ChEBIStandardizer:
 
         '''
         token = self._process_token(token)
+        
+        if isinstance(token, str):
+            return self.names.loc[token.lower()]
+        else:
+            return self._names.loc[token]
 
-        match token:
-            case int() | np.int8() | np.int32() | np.int64() | np.uint8() | np.uint32() | np.uint64():
-                return self._names.loc[token]
-            case str():
-                return self.names.loc[token.lower()]
 
     def get_by_id(self, compound_id: int):
         '''
