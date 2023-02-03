@@ -202,6 +202,11 @@ class ChEBIStandardizer:
         return token
 
     def process(self, token):
+        """
+        Get data for token (compound name or ChEBI). 
+        Returns a dictionary with keys: 'CHEBI', 'REF_CHEBI', 'REF_NAME', 
+        'EXACT_MATCH', 'COMPOUND_ID', 'SMILES', 'QUERY'. 
+        """
         record = self.get_chebi_reference(token)
         compound_id = self._process_token(record["CHEBI"])
         name = record["REF_NAME"]
