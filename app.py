@@ -12,7 +12,7 @@ STD = ChEBIStandardizer()
 
 st.title('Metabolite-Standardizer')
 
-text = st.text_area('Target labels', value="Mevalonate", height=None, max_chars=None, 
+text = st.text_area('Paste metabolite names (one name per row)', value="Mevalonate\nAspartate", height=None, max_chars=None, 
    key='test', help=None, on_change=None, args=None, kwargs=None, 
    placeholder=None)
    

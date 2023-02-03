@@ -121,7 +121,7 @@ class ChEBIStandardizer:
 
         '''
         token = self._process_token(token)
-        
+
         if isinstance(token, str):
             return self.names.loc[token.lower()]
         else:
@@ -209,9 +209,9 @@ class ChEBIStandardizer:
         """
         record = self.get_chebi_reference(token)
         compound_id = self._process_token(record["CHEBI"])
-        name = record["REF_NAME"]
+        name = self.format_name( record["REF_NAME"] )
         smiles = self.get_smiles(compound_id)
-        record.update(dict(SMILES=smiles, QUERY=token))
+        record.update(dict(SMILES=smiles, QUERY=token, REF_NAME=name))
         return record
 
     def process_many(self, tokens):
@@ -224,3 +224,8 @@ class ChEBIStandardizer:
             return self.smiles.loc[compound_id].STRUCTURE
         except KeyError:
             return None
+    
+    def format_name(self, name):
+        if name.replace(' ', '').isalpha():
+            return name.capitalize()
+        return name
