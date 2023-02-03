@@ -78,7 +78,7 @@ class ChEBIDownloader:
             url = self.url + self.fns[what]["orig"]
         else:
             url = self.url_obo + self.fns[what]["orig"]
-        print(f"Downloading {url} to {self.download_dir}")
+        logging.warning(f"Downloading {url} to {self.download_dir}")
         fn_target = P(self.download_dir) / self.fns[what]["orig"]
         wget.download(url, str(fn_target))
         if fn_target.suffix == ".gz":
@@ -91,7 +91,7 @@ class ChEBIDownloader:
         """
         for what in self.fns.keys():
             self.download(what=what)
-        print("Done")
+        logging.warning("Done")
 
     def extract(self, fn, fn_out):
         """
@@ -100,7 +100,7 @@ class ChEBIDownloader:
         :param fn_out: (str or Path) the file to write the extracted data to
         :return: (str or Path) the extracted file
         """
-        print(f"Extracting: {fn} to {fn_out}")
+        logging.warning(f"Extracting: {fn} to {fn_out}")
         with gzip.open(fn, "rb") as f_in:
             with open(fn_out, "wb") as f_out:
                 shutil.copyfileobj(f_in, f_out)
@@ -116,7 +116,7 @@ class ChEBIDownloader:
         """
         fn = P(fn)
         fn_out = fn.with_suffix(".parquet")
-        print(f"Converting: {fn} to {fn_out}")
+        logging.warning(f"Converting: {fn} to {fn_out}")
         if fn.name == "structures.csv":
             pd.read_csv(fn, na_filter=False, low_memory=False).to_parquet(fn_out)
         elif fn.suffix == ".tsv":
@@ -149,7 +149,7 @@ class ChEBIDownloader:
         missing = self.check_files()
         if missing:
             for what in missing:
-                print(what)
+                logging.warning(what)
                 self.download(what=what)
 
     @property
