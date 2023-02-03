@@ -1,1 +1,10 @@
-git+https://github.com/sorenwacker/chebi-tools
+#git+https://github.com/sorenwacker/chebi-tools
+versioneer
+Levenshtein
+pandas
+rdkit
+wget
+obonet
+pyvis
+tqdm
+pyarrow
