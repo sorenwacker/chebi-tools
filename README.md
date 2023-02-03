@@ -32,4 +32,4 @@ Tools to extract subgraphs from the ChEBI database and for standardization of mo
     a, fig = graph.get_subgraph('CHEBI:22660', show=True)
     fig
 
-![image](https://user-images.githubusercontent.com/3391614/216475349-11c365fc-1079-4a8a-b145-404d1af70338.png)
+![image](https://user-images.githubusercontent.com/3391614/216479405-9824c30d-dcf7-4ae9-9973-daccf0744111.png)
