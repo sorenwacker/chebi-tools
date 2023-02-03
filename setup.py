@@ -27,7 +27,7 @@ config = {
     "download_url": "https://github.com/sorenwacker/chebi_tools",
     "author_email": "swacker@ucalgary.ca",
     "version": versioneer.get_version() if versioneer is not None else None,
-    "cmdclass": versioneer.get_cmdclass() if versioneer is not None else None,
+    "cmdclass": versioneer.get_cmdclass() if versioneer is not None else [],
     "install_requires": install_requires,
     "packages": find_packages(),
     "scripts": [],
