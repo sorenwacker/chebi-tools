@@ -2,6 +2,7 @@ import os
 import gzip
 import shutil
 import wget
+import logging
 
 import pandas as pd
 
