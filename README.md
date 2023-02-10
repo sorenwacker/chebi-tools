@@ -2,6 +2,8 @@
 
 Tools to extract subgraphs from the ChEBI database and for standardization of molecular entities e.g. for applications in metabolomics.
 
+Development version app is running at: https://sorenwacker-chebi-tools-app-bfu421.streamlit.app/
+
 
 ## ChEBIStandardizer
 
