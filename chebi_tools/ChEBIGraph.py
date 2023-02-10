@@ -14,7 +14,8 @@ from . import ChEBIDownloader
 class ChEBIGraph:
     def __init__(self, download_dir=None, G=None):
         self.downloader = ChEBIDownloader(download_dir=download_dir)
-        self.downloader.download_missing()
+        self.requires = ['obo']
+        self.downloader.download_missing(self.requires)
         self.download_dir = self.downloader.download_dir
         self.G = G
         if G is None:
@@ -210,7 +211,6 @@ class ChEBIGraph:
         data["name_alpha"] = data.name.str.replace(' ', '').str.isalpha()
         data["name_length"] = data.name.apply(len)
         data = data.sort_values("name_length")
-        print(data)
         grps = data.groupby(["abs_charge", "name_alpha"])
         for ndx, grp in grps:
             return grp.index[0], grp.name[0]
