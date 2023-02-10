@@ -1,14 +1,14 @@
 from datetime import date
 
-from chebi_tools.ChEBIStandardizer import ChEBIStandardizer
-from chebi_tools.ChEBIGraph import ChEBIGraph
+#from chebi_tools.ChEBIStandardizer import ChEBIStandardizer
+#from chebi_tools.ChEBIGraph import ChEBIGraph
 
 import streamlit as st
 
 def today():
     return date.today().strftime("%y%m%d")
 
-STD = ChEBIStandardizer()
+#STD = ChEBIStandardizer()
 
 st.title('Metabolite-Standardizer')
 
@@ -24,7 +24,9 @@ if st.button('Convert', key=None, help=None, on_click=None, args=None,
              kwargs=None, type="secondary", disabled=False):
     
     tokens = text.split()
-    df = STD.process_many(tokens)
+    df = pd.DataFrame() #
+    
+    #df = STD.process_many(tokens)
 
     st.dataframe(df)
 
