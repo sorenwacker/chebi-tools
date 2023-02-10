@@ -27,9 +27,9 @@ class ChEBIGraph:
         data = self.G.nodes[node]
         if "property_value" not in data.keys():
             return False
-        smiles = self.get_property_from_node(node, "formula")
+        formula = self.get_property_from_node(node, "formula")
         mass = self.get_property_from_node(node, "monoisotopicmass")
-        if (smiles is None) or ("*" in smiles) or (smiles == ""):
+        if (formula is None) or ("R" in formula) or (formula == ""):
             return False
         if (mass is None) or (mass < 50) or (mass > 1500):
             return False
@@ -208,9 +208,9 @@ class ChEBIGraph:
     def get_reference_chebi_of_group(self, group_ids):
         data = self.df.loc[group_ids].copy()
         data["abs_charge"] = data.charge.abs()
-        data["name_alpha"] = data.name.str.replace(' ', '').str.isalpha()
+        data["name_alpha"] = ~data.name.str.replace(' ', '').str.isalpha()
         data["name_length"] = data.name.apply(len)
-        data = data.sort_values("name_length")
+        data = data.sort_values(["name_alpha", "name_length"])
         grps = data.groupby(["abs_charge", "name_alpha"])
         for ndx, grp in grps:
             return grp.index[0], grp.name[0]
