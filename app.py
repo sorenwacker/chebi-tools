@@ -1,7 +1,7 @@
 from datetime import date
 import pandas as pd
 
-#from chebi_tools.ChEBIStandardizer import ChEBIStandardizer
+from chebi_tools.ChEBIStandardizer import ChEBIStandardizer
 #from chebi_tools.ChEBIGraph import ChEBIGraph
 
 import streamlit as st
