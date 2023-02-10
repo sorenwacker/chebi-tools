@@ -27,7 +27,7 @@ class ChEBIStandardizer:
         self.reference_chebi = None
 
         self.downloader = ChEBIDownloader(download_dir=download_dir)
-        self.requires = ['compounds', 'structures']
+        self.requires = ['compounds', 'structures', 'names']
         self.downloader.download_missing(self.requires)
         self.download_dir = self.downloader.download_dir
         self.files = self.downloader.files
