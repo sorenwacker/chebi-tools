@@ -142,14 +142,16 @@ class ChEBIDownloader:
         missing = [fn for fn, path in self.files.items() if not path.is_file()]
         return missing
 
-    def download_missing(self, missing=None):
+    def download_missing(self, required=None):
         """
         Downloads missing files from ChEBI to the download directory.
         """
-        if missing is None:
-            missing = self.check_files()
-        if missing:
-            for what in missing:
+        missing = self.check_files()
+
+        to_download = [e for e in required if e in missing]
+
+        if to_download:
+            for what in to_download:
                 logging.warning(what)
                 self.download(what=what)
 
