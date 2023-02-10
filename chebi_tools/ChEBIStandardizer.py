@@ -189,7 +189,7 @@ class ChEBIStandardizer:
             record.update(dict(EXACT_MATCH=exact_match, COMPOUND_ID=compound_id))
         except KeyError as e:
             logging.error(e)
-            record = {'COMPOUND_ID': compound_id, 'EXACT_MATCH': exact_match, 'CHEBI': None, 'REF_NAME': ''}
+            record = {'COMPOUND_ID': compound_id, 'EXACT_MATCH': exact_match, 'CHEBI': f'CHEBI:{compound_id}', 'REF_NAME': '', 'REF_CHEBI': ''}
         return record
 
     def suggest_name(self, token):
