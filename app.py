@@ -24,8 +24,9 @@ def convert_df(df):
 if st.button('Convert', key=None, help=None, on_click=None, args=None, 
              kwargs=None, type="secondary", disabled=False):
     
-    tokens = text.split()
-    df = pd.DataFrame() #
+    tokens = text.split('\n')
+
+    df = pd.DataFrame()
     
     df = STD.process_many(tokens)
 
