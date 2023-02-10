@@ -148,6 +148,9 @@ class ChEBIDownloader:
         """
         missing = self.check_files()
 
+        if required is None:
+            required = missing
+
         to_download = [e for e in required if e in missing]
 
         if to_download:
