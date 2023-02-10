@@ -12,6 +12,7 @@ def today():
 STD = ChEBIStandardizer()
 
 st.title('Metabolite-Standardizer')
+st.set_page_config(layout="wide")
 
 text = st.text_area('Paste metabolite names (one name per row)', value="Mevalonate\nAspartate", height=None, max_chars=None, 
    key='test', help=None, on_change=None, args=None, kwargs=None, 
