@@ -17,7 +17,7 @@ text = st.text_area('Paste metabolite names (one name per row)', value="Mevalona
    key='test', help=None, on_change=None, args=None, kwargs=None, 
    placeholder=None)
    
-@st.experimental_memo
+@st.cache_data
 def convert_df(df):
    return df.to_csv(index=False).encode('utf-8')   
 
