@@ -8,3 +8,4 @@ obonet
 pyvis
 tqdm
 pyarrow
+streamlit
