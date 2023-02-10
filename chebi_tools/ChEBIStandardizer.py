@@ -10,6 +10,7 @@ from .ChEBIDownloader import ChEBIDownloader
 
 DATA_PATH = P(__file__).parent.parent/'data'
 
+OUTPUT_COLS = ['QUERY', 'CHEBI', 'REF_CHEBI', 'REF_NAME', 'EXACT_MATCH', 'SMILES']
 
 
 class ChEBIStandardizer:
@@ -183,9 +184,12 @@ class ChEBIStandardizer:
         else: 
             compound_id = token
             exact_match = True
-
-        record = self.reference_chebi.loc[compound_id].to_dict()
-        record.update(dict(EXACT_MATCH=exact_match, COMPOUND_ID=compound_id))
+        try:
+            record = self.reference_chebi.loc[compound_id].to_dict()
+            record.update(dict(EXACT_MATCH=exact_match, COMPOUND_ID=compound_id))
+        except KeyError as e:
+            logging.error(e)
+            record = {'COMPOUND_ID': compound_id, 'EXACT_MATCH': exact_match, 'CHEBI': None, 'REF_NAME': ''}
         return record
 
     def suggest_name(self, token):
@@ -209,6 +213,8 @@ class ChEBIStandardizer:
         Returns a dictionary with keys: 'CHEBI', 'REF_CHEBI', 'REF_NAME', 
         'EXACT_MATCH', 'COMPOUND_ID', 'SMILES', 'QUERY'. 
         """
+        if token == '': 
+            return ''
         record = self.get_chebi_reference(token)
         compound_id = self._process_token(record["CHEBI"])
         name = self.format_name( record["REF_NAME"] )
@@ -219,7 +225,7 @@ class ChEBIStandardizer:
     def process_many(self, tokens):
         records = self._process_many(tokens)
         df = pd.DataFrame.from_records(records)
-        return df
+        return self.format_dataframe(df)
 
     def get_smiles(self, compound_id):
         try:
@@ -231,3 +237,6 @@ class ChEBIStandardizer:
         if name.replace(' ', '').isalpha():
             return name.capitalize()
         return name
+
+    def format_dataframe(self, df):
+        return df[OUTPUT_COLS]
