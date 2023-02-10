@@ -9,7 +9,7 @@ import streamlit as st
 def today():
     return date.today().strftime("%y%m%d")
 
-#STD = ChEBIStandardizer()
+STD = ChEBIStandardizer()
 
 st.title('Metabolite-Standardizer')
 
@@ -27,7 +27,7 @@ if st.button('Convert', key=None, help=None, on_click=None, args=None,
     tokens = text.split()
     df = pd.DataFrame() #
     
-    #df = STD.process_many(tokens)
+    df = STD.process_many(tokens)
 
     st.dataframe(df)
 
