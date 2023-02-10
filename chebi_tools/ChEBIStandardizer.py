@@ -10,6 +10,8 @@ from .ChEBIDownloader import ChEBIDownloader
 
 DATA_PATH = P(__file__).parent.parent/'data'
 
+
+
 class ChEBIStandardizer:
     """
     The ChEBIStandardizer class is a tool that is used to standardize compounds 
@@ -25,7 +27,8 @@ class ChEBIStandardizer:
         self.reference_chebi = None
 
         self.downloader = ChEBIDownloader(download_dir=download_dir)
-        self.downloader.download_missing()
+        self.requires = ['compounds', 'structures']
+        self.downloader.download_missing(self.requires)
         self.download_dir = self.downloader.download_dir
         self.files = self.downloader.files
         self.files.update(dict(smiles=P(f"{self.download_dir}/smiles.parquet")))
@@ -107,7 +110,7 @@ class ChEBIStandardizer:
         '''
         Creates the smiles.parquet file from the structures.tsv file.
         '''
-        print("Preparing smiles.parquet")
+        logging.warning("Preparing smiles.parquet")
         fn = self.files["smiles"]
         structures = pd.read_parquet(self.files["structures"])
         smiles = structures[structures.TYPE == "SMILES"].set_index("COMPOUND_ID")[
