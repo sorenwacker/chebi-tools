@@ -1,3 +1,5 @@
+[![Python package](https://github.com/sorenwacker/chebi-tools/actions/workflows/python-package.yml/badge.svg)](https://github.com/sorenwacker/chebi-tools/actions/workflows/python-package.yml)
+
 # chebi-tools
 
 Tools to extract subgraphs from the ChEBI database and for standardization of molecular entities e.g. for applications in metabolomics.
