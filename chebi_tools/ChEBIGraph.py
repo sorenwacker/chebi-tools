@@ -207,7 +207,7 @@ class ChEBIGraph:
     def get_reference_chebi_of_group(self, group_ids):
         data = self.df.loc[group_ids].copy()
         data["abs_charge"] = data.charge.abs()
-        data["name_alpha"] = data.name.str.replace(' ', '').isalpha()
+        data["name_alpha"] = data.name.str.replace(' ', '').str.isalpha()
         data["name_length"] = data.name.apply(len)
         data = data.sort_values("name_length")
         print(data)
