@@ -36,7 +36,7 @@ class ChEBIGraph:
 
     def load_graph(self):
         fn = self.downloader.get_path("obo")
-        print(f"Loading topology from: {fn}")
+        logging.warning(f"Loading topology from: {fn}")
         self.G = obonet.read_obo(fn)
 
     def remove_unnecessary_nodes(self):
@@ -47,7 +47,7 @@ class ChEBIGraph:
 
     def remove_compound_classes_nodes(self):
         # Remove nodes without propertie values
-        print("Removing compound classes nodes")
+        logging.warning("Removing compound classes nodes")
         nodes_to_remove = [n for n in tqdm(self.nodes) if not self.check_node(n)]
         self.G.remove_nodes_from(nodes_to_remove)
 
@@ -65,27 +65,27 @@ class ChEBIGraph:
         self.G.remove_edges_from(edges_to_remove)
 
     def remove_deuterated_compounds(self):
-        print("Removing deuterated compounds")
+        logging.warning("Removing deuterated compounds")
         self.remove_subgraph("CHEBI:76107", undirected=True, reverse_graph=True, depth=1)
 
     def remove_dipeptides(self):
-        print("Removing dipeptides")
+        logging.warning("Removing dipeptides")
         self.remove_subgraph("CHEBI:46761", undirected=True, reverse_graph=True, depth=1)
 
     def remove_tripeptides(self):
-        print("Removing tripeptides")
+        logging.warning("Removing tripeptides")
         self.remove_subgraph("CHEBI:47923", undirected=True, reverse_graph=True, depth=1)
 
     def remove_tetrapeptides(self):
-        print("Removing tetrapeptides")
+        logging.warning("Removing tetrapeptides")
         self.remove_subgraph("CHEBI:48030", undirected=True, reverse_graph=True, depth=1)
 
     def remove_pentapeptides(self):
-        print("Removing pentapeptides")
+        logging.warning("Removing pentapeptides")
         self.remove_subgraph("CHEBI:48545", undirected=True, reverse_graph=True, depth=1)
 
     def remove_oligopeptides(self):
-        print("Removing oligopeptides")
+        logging.warning("Removing oligopeptides")
         self.remove_dipeptides()
         self.remove_tripeptides()
         self.remove_tetrapeptides()
@@ -93,7 +93,7 @@ class ChEBIGraph:
         self.remove_subgraph("CHEBI:25676", undirected=True, reverse_graph=True, depth=1)
 
     def remove_isotopically_modified_compounds(self):
-        print('Removing isotopically modified compounds')
+        logging.warning('Removing isotopically modified compounds')
         self.remove_subgraph('CHEBI:139358', depth=2, undirected=False, reverse_graph=True)
 
 
