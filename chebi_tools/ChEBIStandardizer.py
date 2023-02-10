@@ -174,13 +174,12 @@ class ChEBIStandardizer:
         '''
         token = self._process_token(token)
 
-        match token:
-            case int() | np.int8() | np.int32() | np.int64() | np.uint8() | np.uint32() | np.uint64():
-                compound_id = token
-                exact_match = True
-            case str():
+        if isinstance(token, str):
                 search_result, exact_match = self.search(token)
                 compound_id = search_result.COMPOUND_ID
+        else: 
+            compound_id = token
+            exact_match = True
 
         record = self.reference_chebi.loc[compound_id].to_dict()
         record.update(dict(EXACT_MATCH=exact_match, COMPOUND_ID=compound_id))
