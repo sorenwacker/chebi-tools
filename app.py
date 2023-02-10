@@ -6,13 +6,14 @@ from chebi_tools.ChEBIStandardizer import ChEBIStandardizer
 
 import streamlit as st
 
+st.set_page_config(layout="wide")
+
 def today():
     return date.today().strftime("%y%m%d")
 
 STD = ChEBIStandardizer()
 
 st.title('Metabolite-Standardizer')
-st.set_page_config(layout="wide")
 
 text = st.text_area('Paste metabolite names (one name per row)', value="Mevalonate\nAspartate", height=None, max_chars=None, 
    key='test', help=None, on_change=None, args=None, kwargs=None, 
