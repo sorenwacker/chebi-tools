@@ -4,7 +4,9 @@
 
 Tools to extract subgraphs from the ChEBI database and for standardization of molecular entities e.g. for applications in metabolomics.
 
-Instances of the development version of the Metabolomics-Standardizer app are running at: https://sorenwacker-chebi-tools-app-bfu421.streamlit.app/ and https://metabolomics-standardizer.herokuapp.com/.
+An instance of the development version of the Metabolomics-Standardizer app is running at: https://sorenwacker-chebi-tools-app-bfu421.streamlit.app/ 
+
+(and https://metabolomics-standardizer.herokuapp.com/ quota exceeded.)
 
 
 ## ChEBIStandardizer
