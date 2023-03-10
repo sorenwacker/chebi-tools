@@ -6,7 +6,7 @@ Tools to extract subgraphs from the ChEBI database and for standardization of mo
 
 An instance of the development version of the Metabolomics-Standardizer app is running at: https://sorenwacker-chebi-tools-app-bfu421.streamlit.app/ 
 
-(and https://metabolomics-standardizer.herokuapp.com/ quota exceeded.)
+Never use Heroku again.
 
 
 ## ChEBIStandardizer
