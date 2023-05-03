@@ -1,5 +1,6 @@
 import logging
 import obonet
+import warnings
 
 import networkx as nx
 import pandas as pd
@@ -40,11 +41,16 @@ class ChEBIGraph:
         logging.warning(f"Loading topology from: {fn}")
         self.G = obonet.read_obo(fn)
 
-    def remove_unnecessary_nodes(self):
+    def prepare(self):
         self.remove_deuterated_compounds()
         self.remove_oligopeptides()
         self.remove_compound_classes_nodes()
         self.remove_isotopically_modified_compounds()
+
+    def remove_unnecessary_nodes(self):
+        warnings.warn(".remove_unnecessary_nodes() is deprecated, use .prepare() instead", DeprecationWarning)
+
+        self.prepare()
 
     def remove_compound_classes_nodes(self):
         # Remove nodes without propertie values
