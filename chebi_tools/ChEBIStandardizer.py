@@ -88,7 +88,17 @@ class ChEBIStandardizer:
 
         # Remove non-compound names
         names = names[~names.SOURCE.isin(["Chemical Ontology"])]
+        
+        def remove_patterns(names, patterns):
+            for pattern in patterns:
+                new_names = names[names.NAME.str.contains(pattern, regex=False)].copy()
+                new_names['NAME'] = new_names['NAME'].str.replace(pattern, '')    
+                names = pd.concat([names, new_names]).reset_index(drop=True)
+            return names
 
+        names = remove_patterns(names, ['(S)-', '(R)-'])
+       
+        
         names["NAME_lowercase"] = names["NAME"].str.lower()
         self.names = names
 
