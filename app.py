@@ -29,6 +29,8 @@ if st.button('Convert', key=None, help=None, on_click=None, args=None,
     
     tokens = text.split('\n')
 
+    tokens = [e.strip() if e != '']
+    
     df = pd.DataFrame()
     
     df = STD.process_many(tokens)

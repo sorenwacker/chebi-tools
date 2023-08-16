@@ -240,8 +240,13 @@ class ChEBIStandardizer:
         name = self.format_name( record["REF_NAME"] )
         smiles = self.get_smiles(compound_id)
         record.update(dict(SMILES=smiles, QUERY=token, REF_NAME=name))
-        accession_numbers = self.get_accession_numbers(compound_id)
-        record.update(accession_numbers)
+
+        if record['REF_CHEBI'] != '':
+            ref_compound_id = self._process_token(record['REF_CHEBI'])
+            accession_numbers = self.get_accession_numbers(compound_id)
+            #accession_numbers = self.get_accession_numbers(ref_compound_id)
+            record.update(accession_numbers)
+            
         return record
 
     def get_accession_numbers(self, token):
@@ -270,4 +275,4 @@ class ChEBIStandardizer:
         return name
 
     def format_dataframe(self, df):
-        return df[OUTPUT_COLS]
+        return df.set_index(OUTPUT_COLS).reset_index().drop(['COMPOUND_ID'], axis=1)

@@ -43,7 +43,8 @@ def standardize_smiles(smiles):
 
 
 def list_condense(x):
-    if isinstance(x, list) and (len(x) == 1):
-        return x[0]
-    else:
-        return x
+    if x is not None and not isinstance(x, str):
+        x = list(set(x))
+        if (len(x) == 1):
+            return x[0]
+    return x

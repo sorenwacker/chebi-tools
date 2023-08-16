@@ -222,6 +222,8 @@ class ChEBIGraph:
             return grp.index[0], grp.name[0]
         return None, None
 
+
+    
     def get_group(self, name, **kwargs):
         H = self.get_subgraph(name, **kwargs)
         return list(H.nodes)
