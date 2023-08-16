@@ -245,8 +245,8 @@ class ChEBIStandardizer:
 
         if record['REF_CHEBI'] != '':
             ref_compound_id = self._process_token(record['REF_CHEBI'])
-            #accession_numbers = self.get_accession_numbers(compound_id)
-            accession_numbers = self.get_accession_numbers(ref_compound_id)
+            accession_numbers = self.get_accession_numbers(compound_id)
+            #accession_numbers = self.get_accession_numbers(ref_compound_id)
             record.update(accession_numbers)
             
         return record
