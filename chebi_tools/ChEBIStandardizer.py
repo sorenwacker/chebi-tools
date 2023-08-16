@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 
 from pathlib import Path as P
+from functools import lru_cache
 
 from .ChEBIDownloader import ChEBIDownloader
 from . import tools as T
@@ -40,7 +41,7 @@ class ChEBIStandardizer:
         # Load data
         self.load_data()
 
-        self._process_many = np.vectorize(self.process)
+        #self._process_many = np.vectorize(self.process)
 
     def load_data(self):
         '''
@@ -227,6 +228,7 @@ class ChEBIStandardizer:
                 token = int(token)
         return token
 
+    @lru_cache(1000)
     def process(self, token):
         """
         Get data for token (compound name or ChEBI). 
@@ -259,7 +261,7 @@ class ChEBIStandardizer:
 
     
     def process_many(self, tokens):
-        records = self._process_many(tokens)
+        records = [self.process(e) for e in tokens]
         df = pd.DataFrame.from_records(records)
         return self.format_dataframe(df)
 
@@ -276,3 +278,4 @@ class ChEBIStandardizer:
 
     def format_dataframe(self, df):
         return df.set_index(OUTPUT_COLS).reset_index().drop(['COMPOUND_ID'], axis=1)
+
