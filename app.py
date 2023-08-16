@@ -29,7 +29,7 @@ if st.button('Convert', key=None, help=None, on_click=None, args=None,
     
     tokens = text.split('\n')
 
-    tokens = [e.strip() if e != '']
+    tokens = [e.strip() if e != '' for e in tokens]
     
     df = pd.DataFrame()
     
