@@ -40,3 +40,10 @@ def standardize_smiles(smiles):
     except Exception:
         logging.error(traceback.format_exc())
         return None
+
+
+def list_condense(x):
+    if isinstance(x, list) and (len(x) == 1):
+        return x[0]
+    else:
+        return x

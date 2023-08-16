@@ -7,6 +7,7 @@ import pandas as pd
 from pathlib import Path as P
 
 from .ChEBIDownloader import ChEBIDownloader
+from . import tools as T
 
 DATA_PATH = P(__file__).parent.parent/'data'
 
@@ -28,12 +29,14 @@ class ChEBIStandardizer:
         self.reference_chebi = None
 
         self.downloader = ChEBIDownloader(download_dir=download_dir)
-        self.requires = ['compounds', 'structures', 'names']
+        self.requires = ['compounds', 'structures', 'names', 'database_accession']
         self.downloader.download_missing(self.requires)
         self.download_dir = self.downloader.download_dir
         self.files = self.downloader.files
         self.files.update(dict(smiles=P(f"{self.download_dir}/smiles.parquet")))
 
+        self.accession_numbers = None
+        
         # Load data
         self.load_data()
 
@@ -46,7 +49,14 @@ class ChEBIStandardizer:
         self.load_names()
         self.load_reference_data()
         self.load_smiles()
+        self.load_accession_numbers()
 
+    def load_accession_numbers(self):
+        df = pd.read_parquet(self.downloader.files['database_accession'])
+        df = df[df.TYPE.str.lower().str.contains('accession')]
+        accession_numbers = df.pivot_table(index='COMPOUND_ID', columns='SOURCE', values='ACCESSION_NUMBER', aggfunc=T.list_condense)
+        self.accession_numbers = accession_numbers
+    
     def load_smiles(self):
         '''
         Loads the smiles data from the smiles.parquet file, or creates the file if it doesn't exist.
@@ -230,8 +240,19 @@ class ChEBIStandardizer:
         name = self.format_name( record["REF_NAME"] )
         smiles = self.get_smiles(compound_id)
         record.update(dict(SMILES=smiles, QUERY=token, REF_NAME=name))
+        accession_numbers = self.get_accession_numbers(compound_id)
+        record.update(accession_numbers)
         return record
 
+    def get_accession_numbers(self, token):
+        try:
+            accession_numbers = self.accession_numbers.loc[token].dropna().to_dict()
+        except KeyError as e:
+            logging.warning(e)
+            accession_numbers = {}
+        return accession_numbers
+
+    
     def process_many(self, tokens):
         records = self._process_many(tokens)
         df = pd.DataFrame.from_records(records)
