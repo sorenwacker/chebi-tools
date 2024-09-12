@@ -12,9 +12,9 @@ An instance of the development version of the Metabolomics-Standardizer app is r
     dl = ChEBIDownloader(what='obo')
     dl.download()
     
-    WARNING:root:Downloading https://ftp.ebi.ac.uk/pub/databases/chebi/ontology/chebi_core.obo.gz to /Users/sdrwacker/libChEBI
-    WARNING:root:Extracting: /Users/sdrwacker/libChEBI/chebi_core.obo.gz to /Users/sdrwacker/libChEBI/chebi_core.obo
-    WARNING:root:Converting: /Users/sdrwacker/libChEBI/chebi_core.obo to /Users/sdrwacker/libChEBI/chebi_core.parquet
+    WARNING:root:Downloading https://ftp.ebi.ac.uk/pub/databases/chebi/ontology/chebi_core.obo.gz to /Users/user/libChEBI
+    WARNING:root:Extracting: /Users/user/libChEBI/chebi_core.obo.gz to /Users/user/libChEBI/chebi_core.obo
+    WARNING:root:Converting: /Users/user/libChEBI/chebi_core.obo to /Users/user/libChEBI/chebi_core.parquet
 
 ## ChEBIStandardizer
 
