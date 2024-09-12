@@ -6,7 +6,15 @@ Tools to extract subgraphs from the ChEBI database and for standardization of mo
 
 An instance of the development version of the Metabolomics-Standardizer app is running at: https://sorenwacker-chebi-tools-app-bfu421.streamlit.app/ 
 
+## ChEBIDownloader
 
+    from chebi_tools import ChEBIDownloader
+    dl = ChEBIDownloader(what='obo')
+    dl.download()
+    
+    WARNING:root:Downloading https://ftp.ebi.ac.uk/pub/databases/chebi/ontology/chebi_core.obo.gz to /Users/sdrwacker/libChEBI
+    WARNING:root:Extracting: /Users/sdrwacker/libChEBI/chebi_core.obo.gz to /Users/sdrwacker/libChEBI/chebi_core.obo
+    WARNING:root:Converting: /Users/sdrwacker/libChEBI/chebi_core.obo to /Users/sdrwacker/libChEBI/chebi_core.parquet
 
 ## ChEBIStandardizer
 
